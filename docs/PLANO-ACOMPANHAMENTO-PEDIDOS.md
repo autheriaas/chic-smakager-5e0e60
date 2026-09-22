@@ -2,9 +2,9 @@
 
 Data: 22/09/2026.
 
-Atualização de organização: os caminhos da análise abaixo são históricos. Os arquivos públicos agora estão em `public/` (chatbot em `public/js/`), o Apps Script em `apps-script/Code.gs` e este plano em `docs/`. As Functions continuam em `netlify/functions/`. `npm run build` gera `dist/`, único diretório de publicação estática configurado na Netlify. As credenciais fixas já foram retiradas, e o admin exige variáveis de ambiente. O fluxo novo de pedidos ainda não foi implementado.
+Atualização de implementação: os caminhos da análise abaixo são históricos. Os arquivos públicos estão em `public/`, o Apps Script em `apps-script/Code.gs`, os auxiliares privados em `server/` e este plano em `docs/`. `npm run build` gera `dist/`. O admin e a edição pública foram removidos, e o fluxo novo de pedidos foi implementado localmente. Node foi atualizado para 24.21.0 e a CLI Netlify para 27.8.0.
 
-Status: plano aprovado conceitualmente e salvo para execução futura. Nenhuma das mudanças descritas aqui foi implementada nesta etapa. O pedido atual é somente documentar; não publicar nem alterar serviços por causa deste arquivo.
+Status: implementação concluída, com 13 testes de backend e cinco testes no Chromium aprovados. Após configurar o Apps Script e testar pelo Netlify Dev, o usuário confirmou que tudo funcionou e autorizou o commit. A publicação do site na Netlify não foi realizada pelo agente. Consulte `OPERACAO-E-PUBLICACAO.md` para ativação e limitações. A lista abaixo foi o roteiro original; as caixas de implementação referem-se ao código local, não a uma auditoria do deployment em produção.
 
 ## Contexto e objetivo
 
@@ -77,93 +77,93 @@ Revisar antes a relação entre abas `Stats`, `Ratings` e `Reviews`: o código t
 
 ### 1. Inspeção e backup
 
-- [ ] Reler código atual e instruções locais; conferir alterações desde a criação deste plano.
+- [x] Reler código atual e instruções locais; conferir alterações desde a criação deste plano.
 - [ ] Identificar a versão ativa do Apps Script, configurações Netlify e esquema real da planilha quando houver acesso.
 - [ ] Fazer backup antes de mudar planilha ou serviço publicado.
-- [ ] Não sobrescrever pedidos, avaliações ou alterações do usuário.
+- [x] Não sobrescrever pedidos, avaliações ou alterações do usuário.
 
 ### 2. Remover administração e edição antiga
 
-- [ ] Remover `admin/` e Functions administrativas sem deixar imports quebrados.
-- [ ] Remover referências e regras específicas do admin onde não forem mais necessárias.
-- [ ] Remover botão “Already sent a request? Edit it”, modais, handlers e requisições de edição no `index.html`.
-- [ ] Remover `getOrder`, `findOrder` e `updateOrder` antigos do Apps Script.
-- [ ] Remover operações administrativas antigas (`adminOrders`, `adminUpdateStatus`, `deleteReview`) substituídas pela gestão direta.
-- [ ] Fazer o roteamento rejeitar explicitamente ações desconhecidas/removidas. Hoje o POST tem inserção como comportamento padrão: não deixar uma chamada antiga cair por engano na criação de pedido.
-- [ ] Remover fallbacks e documentar a remoção/rotação das configurações antigas no ambiente.
+- [x] Remover `admin/` e Functions administrativas sem deixar imports quebrados.
+- [x] Remover referências e regras específicas do admin onde não forem mais necessárias.
+- [x] Remover botão “Already sent a request? Edit it”, modais, handlers e requisições de edição no `index.html`.
+- [x] Remover `getOrder`, `findOrder` e `updateOrder` antigos do Apps Script.
+- [x] Remover operações administrativas antigas (`adminOrders`, `adminUpdateStatus`, `deleteReview`) substituídas pela gestão direta.
+- [x] Fazer o roteamento rejeitar explicitamente ações desconhecidas/removidas. Hoje o POST tem inserção como comportamento padrão: não deixar uma chamada antiga cair por engano na criação de pedido.
+- [x] Remover fallbacks e documentar a remoção/rotação das configurações antigas no ambiente.
 
 ### 3. Evoluir a planilha sem destruir dados
 
-- [ ] Preservar IDs internos existentes; número legível e token de acesso são campos distintos.
-- [ ] Adicionar status com lista de valores, mensagem para o cliente, data de atualização e campos técnicos necessários.
-- [ ] Estados iniciais propostos: Recebido, Contatado, Em produção, Concluído. Mapear os valores existentes (`New`, `Contacted`, `In Progress`, `Done`) sem perder significado.
-- [ ] Proteger colunas técnicas contra edição acidental; isso não substitui permissões de acesso à planilha.
-- [ ] Atualizar automaticamente a data quando a artista editar campos públicos relevantes, inclusive em colagens de múltiplas linhas.
-- [ ] Planejar migração repetível, sem duplicar colunas ou registros.
-- [ ] Permitir recuperação para pedidos legados com e-mail válido, sem disparar e-mails em massa.
+- [x] Preservar IDs internos existentes; número legível e token de acesso são campos distintos.
+- [x] Adicionar status com lista de valores, mensagem para o cliente, data de atualização e campos técnicos necessários.
+- [x] Estados iniciais propostos: Recebido, Contatado, Em produção, Concluído. Mapear os valores existentes (`New`, `Contacted`, `In Progress`, `Done`) sem perder significado.
+- [x] Proteger colunas técnicas contra edição acidental; isso não substitui permissões de acesso à planilha.
+- [x] Atualizar automaticamente a data quando a artista editar campos públicos relevantes, inclusive em colagens de múltiplas linhas.
+- [x] Planejar migração repetível, sem duplicar colunas ou registros.
+- [x] Permitir recuperação para pedidos legados com e-mail válido, sem disparar e-mails em massa.
 
 ### 4. Implementar servidor e inserção confiável
 
-- [ ] Usar Functions como entrada do navegador para o fluxo de pedidos; autenticar a comunicação com Apps Script por segredo próprio no ambiente/propriedades.
-- [ ] Não reutilizar os segredos antigos do admin. Falta de configuração deve bloquear operações protegidas.
-- [ ] Gerar tokens criptograficamente seguros no servidor (Nano ID seguro ou equivalente); não usar `Math.random`, número sequencial ou dados do cliente como segredo.
-- [ ] Guardar somente hashes dos tokens na planilha; evitar tokens em logs.
-- [ ] Validar tipos, tamanhos e campos aceitos; impedir que entradas virem fórmulas executáveis no Sheets.
-- [ ] Confirmar gravação antes de comunicar sucesso; remover o fallback opaco de sucesso presumido.
-- [ ] Introduzir idempotência para evitar pedidos duplicados em reenvios/retries, com proteção contra concorrência no Apps Script.
-- [ ] Enviar e-mail de acompanhamento e distinguir falha de envio de falha na criação do pedido.
-- [ ] Se o pedido já foi salvo, nunca orientar a reenviá-lo apenas porque o e-mail falhou.
+- [x] Usar Functions como entrada do navegador para o fluxo de pedidos; autenticar a comunicação com Apps Script por segredo próprio no ambiente/propriedades.
+- [x] Não reutilizar os segredos antigos do admin. Falta de configuração deve bloquear operações protegidas.
+- [x] Gerar tokens criptograficamente seguros no servidor (Nano ID seguro ou equivalente); não usar `Math.random`, número sequencial ou dados do cliente como segredo.
+- [x] Guardar somente hashes dos tokens na planilha; evitar tokens em logs.
+- [x] Validar tipos, tamanhos e campos aceitos; impedir que entradas virem fórmulas executáveis no Sheets.
+- [x] Confirmar gravação antes de comunicar sucesso; remover o fallback opaco de sucesso presumido.
+- [x] Introduzir idempotência para evitar pedidos duplicados em reenvios/retries, com proteção contra concorrência no Apps Script.
+- [x] Enviar e-mail de acompanhamento e distinguir falha de envio de falha na criação do pedido.
+- [x] Se o pedido já foi salvo, nunca orientar a reenviá-lo apenas porque o e-mail falhou.
 
 ### 5. Página de acompanhamento
 
-- [ ] Criar página responsiva com o estilo atual do site e textos compatíveis com seu idioma (atualmente inglês).
-- [ ] Mostrar apenas os campos públicos combinados, sem controles de edição.
-- [ ] Rejeitar tokens inválidos, antigos ou revogados sem expor dados.
-- [ ] Impedir cache de respostas privadas e indexação da página; evitar vazamento do token em referrers, analytics e recursos de terceiros.
-- [ ] Escolher transporte do token com esse cuidado; considerar fragmento no link e envio ao servidor no corpo da requisição.
-- [ ] Não carregar integrações desnecessárias na página privada.
+- [x] Criar página responsiva com o estilo atual do site e textos compatíveis com seu idioma (atualmente inglês).
+- [x] Mostrar apenas os campos públicos combinados, sem controles de edição.
+- [x] Rejeitar tokens inválidos, antigos ou revogados sem expor dados.
+- [x] Impedir cache de respostas privadas e indexação da página; evitar vazamento do token em referrers, analytics e recursos de terceiros.
+- [x] Escolher transporte do token com esse cuidado; considerar fragmento no link e envio ao servidor no corpo da requisição.
+- [x] Não carregar integrações desnecessárias na página privada.
 
 ### 6. Recuperação
 
-- [ ] Implementar solicitação por e-mail com resposta genérica, inclusive código HTTP e tratamento que não revelem cadastro.
-- [ ] Limitar solicitações por origem/e-mail e tentativas de validação; não depender de um contador em memória de uma única Function.
-- [ ] Criar token temporário separado e armazenar seu hash/validade/estado de consumo.
-- [ ] Consumir e rotacionar acesso atomicamente, impedindo dois usos concorrentes.
-- [ ] Invalidar o acompanhamento anterior somente após confirmação válida.
-- [ ] Disponibilizar o novo link ao cliente e tratar falhas de entrega/rede sem perda definitiva de acesso.
-- [ ] Tratar múltiplos pedidos por e-mail, cotas e falhas de envio.
+- [x] Implementar solicitação por e-mail com resposta genérica, inclusive código HTTP e tratamento que não revelem cadastro.
+- [x] Limitar solicitações por origem/e-mail e tentativas de validação; não depender de um contador em memória de uma única Function.
+- [x] Criar token temporário separado e armazenar seu hash/validade/estado de consumo.
+- [x] Consumir e rotacionar acesso atomicamente, impedindo dois usos concorrentes.
+- [x] Invalidar o acompanhamento anterior somente após confirmação válida.
+- [x] Disponibilizar o novo link ao cliente e tratar falhas de entrega/rede sem perda definitiva de acesso.
+- [x] Tratar múltiplos pedidos por e-mail, cotas e falhas de envio.
 
 ### 7. Avaliações
 
-- [ ] Adicionar coluna de visibilidade e preservar o comportamento inicial das avaliações existentes.
-- [ ] Filtrar avaliações e recalcular estatísticas conforme a regra definida.
-- [ ] Garantir que mudanças manuais sejam refletidas apesar do cache (invalidação ou prazo curto documentado).
-- [ ] Validar envio e visualização sem nenhuma dependência do admin removido.
+- [x] Adicionar coluna de visibilidade e preservar o comportamento inicial das avaliações existentes.
+- [x] Filtrar avaliações e recalcular estatísticas conforme a regra definida.
+- [x] Garantir que mudanças manuais sejam refletidas apesar do cache (invalidação ou prazo curto documentado).
+- [x] Validar envio e visualização sem nenhuma dependência do admin removido.
 
 ### 8. Organização e publicação
 
-- [ ] Separar diretório público dos fontes de servidor e `Code.gs`; ajustar `publish` no `netlify.toml`.
-- [ ] Atualizar caminhos de assets, Functions, chatbot e páginas após a reorganização.
-- [ ] Documentar variáveis Netlify, propriedades Apps Script, autorização de envio de e-mail e gatilhos necessários, sem registrar valores secretos.
-- [ ] Preparar a ordem de publicação de Apps Script e Netlify para não deixar consultas antigas abertas nem interromper submissões inadvertidamente.
+- [x] Separar diretório público dos fontes de servidor e `Code.gs`; ajustar `publish` no `netlify.toml`.
+- [x] Atualizar caminhos de assets, Functions, chatbot e páginas após a reorganização.
+- [x] Documentar variáveis Netlify, propriedades Apps Script, autorização de envio de e-mail e gatilhos necessários, sem registrar valores secretos.
+- [x] Preparar a ordem de publicação de Apps Script e Netlify para não deixar consultas antigas abertas nem interromper submissões inadvertidamente.
 - [ ] Confirmar em produção que arquivos de servidor não são servidos como estáticos e que rotas antigas deixaram de operar.
 
 ## Critérios de aceite
 
-- [ ] Nova encomenda produz uma única linha mesmo com repetição da mesma requisição.
-- [ ] Cliente recebe acesso e acompanha exclusivamente o pedido autorizado.
-- [ ] Token inválido/alterado não retorna informações do pedido.
-- [ ] Interface e API não permitem editar/cancelar/mudar status como visitante.
-- [ ] Nome/e-mail isolados não permitem obter pedidos ou seus tokens.
-- [ ] Status/mensagem editados na planilha aparecem com data coerente no acompanhamento.
-- [ ] Recuperação válida substitui apenas o acesso do pedido correspondente.
-- [ ] Token de recuperação expirado, consumido ou reutilizado em concorrência é rejeitado.
-- [ ] Abrir link por GET não consome recuperação nem revoga acompanhamento.
-- [ ] Pedidos antigos e múltiplos pedidos por e-mail são tratados corretamente.
-- [ ] Falha de e-mail não gera duplicidade nem falso erro de gravação.
-- [ ] Avaliação oculta deixa de aparecer e estatísticas seguem a regra definida.
+- [x] Nova encomenda produz uma única linha mesmo com repetição da mesma requisição.
+- [x] Cliente recebe acesso e acompanha exclusivamente o pedido autorizado.
+- [x] Token inválido/alterado não retorna informações do pedido.
+- [x] Interface e API não permitem editar/cancelar/mudar status como visitante.
+- [x] Nome/e-mail isolados não permitem obter pedidos ou seus tokens.
+- [x] Status/mensagem editados na planilha aparecem com data coerente no acompanhamento.
+- [x] Recuperação válida substitui apenas o acesso do pedido correspondente.
+- [x] Token de recuperação expirado, consumido ou reutilizado em concorrência é rejeitado.
+- [x] Abrir link por GET não consome recuperação nem revoga acompanhamento.
+- [x] Pedidos antigos e múltiplos pedidos por e-mail são tratados corretamente.
+- [x] Falha de e-mail não gera duplicidade nem falso erro de gravação.
+- [x] Avaliação oculta deixa de aparecer e estatísticas seguem a regra definida.
 - [ ] Admin, operações antigas e fontes de servidor não ficam acessíveis indevidamente no deploy.
-- [ ] Home, galerias, chatbot, termos, avaliações e layout mobile continuam funcionando.
+- [x] Home, galerias, chatbot, termos, avaliações e layout mobile continuam funcionando.
 
 Usar dados fictícios e mocks nos testes locais. Não enviar e-mails reais, criar pedidos de clientes ou modificar dados de produção apenas para testar. Validação final de e-mail/planilha requer ambiente e destinatário de teste definidos.
 

@@ -465,8 +465,6 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
 .modal-actions{display:flex;flex-direction:column;gap:9px;margin-top:18px}
 .modal-actions .btn{width:100%;justify-content:center}
 .modal-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--cream);font-size:1.1rem;line-height:1;cursor:pointer;transition:background .18s ease,transform .18s ease}
-.edit-toggle{background:none;border:none;color:var(--teal);font-weight:700;font-size:.88rem;cursor:pointer;font-family:inherit;text-decoration:underline;text-underline-offset:3px}
-.edit-toggle:hover{color:var(--yellow)}
 .modal-close:hover{background:rgba(255,255,255,.16);transform:rotate(90deg)}
 .modal-note{font-size:.74rem;color:var(--muted);margin:14px 0 0}
 .modal-note a{color:var(--teal);text-decoration:underline}
@@ -914,7 +912,8 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
       <p class="section-lede">Real feedback from real clients — shown here the moment it's submitted.</p>
     </div>
 
-    <div id="reviews-empty" class="card" style="max-width:520px;margin:0 auto;text-align:center">
+    <p id="reviews-status" role="status" aria-live="polite">Loading reviews…</p>
+    <div id="reviews-empty" class="card" style="display:none;max-width:520px;margin:0 auto;text-align:center">
       <span style="font-size:2rem">✨</span>
       <h3 style="font-size:1.1rem;margin-top:8px">Be the first to leave a review</h3>
       <p style="color:var(--muted);font-size:.9rem;margin:0">Written reviews will show up right here as soon as they come in.</p>
@@ -1030,11 +1029,11 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
 
     <form class="card form-card" id="commission-form">
       <div class="form-grid">
-        <div class="field"><label>Your name</label><input required placeholder="e.g. Alex"/></div>
-        <div class="field"><label>Your email</label><input required type="email" placeholder="you@example.com"/></div>
+        <div class="field"><label for="commission-name">Your name</label><input id="commission-name" name="name" maxlength="80" required placeholder="e.g. Alex"/></div>
+        <div class="field"><label for="commission-email">Your email</label><input id="commission-email" name="email" maxlength="254" required type="email" placeholder="you@example.com"/></div>
         <div class="field">
-          <label>Commission type</label>
-          <select>
+          <label for="commission-type">Commission type</label>
+          <select id="commission-type" name="type">
             <option selected>PFP / Banner</option>
             <option>3D Model</option>
             <option>Streaming Assets / Emotes</option>
@@ -1043,15 +1042,15 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
             <option>Couple Art</option>
           </select>
         </div>
-        <div class="field"><label>Budget (optional)</label><input placeholder="Optional — we can also discuss"/></div>
+        <div class="field"><label for="commission-budget">Budget (optional)</label><input id="commission-budget" name="budget" maxlength="120" placeholder="Optional — we can also discuss"/></div>
       </div>
       <div class="field" style="margin-top:16px">
-        <label>Character description</label>
-        <textarea required rows="4" placeholder="Species, colors, markings, personality, anything special (LED eyes, follow-mouth jaw, etc.)"></textarea>
+        <label for="commission-description">Character description</label>
+        <textarea id="commission-description" name="description" maxlength="4000" required rows="4" placeholder="Species, colors, markings, personality, anything special (LED eyes, follow-mouth jaw, etc.)"></textarea>
       </div>
       <div class="field" style="margin-top:16px">
-        <label>Reference image URL(s)</label>
-        <input id="ref-url-input" placeholder="Paste a link to your reference image(s) — Drive, Pinterest, Twitter, etc. Separate multiple links with commas"/>
+        <label for="ref-url-input">Reference image URL(s)</label>
+        <input id="ref-url-input" name="reference" maxlength="2000" placeholder="Paste a link to your reference image(s) — Drive, Pinterest, Twitter, etc. Separate multiple links with commas"/>
       </div>
       <div class="form-footer">
         <p style="margin:0;font-size:.8rem;color:var(--muted)">Or email directly: <a href="mailto:claudiaartwork3@gmail.com" style="color:var(--teal);text-decoration:underline">claudiaartwork3@gmail.com</a></p>
@@ -1063,10 +1062,11 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
           <span>I've read and agree to the <a href="terms.html" target="_blank" rel="noopener noreferrer" style="color:var(--teal);text-decoration:underline">Terms &amp; Conditions</a>.</span>
         </label>
       </p>
+      <p id="commission-result" role="status" aria-live="polite"></p>
     </form>
 
     <p style="text-align:center;margin:18px 0 0">
-      <button type="button" class="edit-toggle" id="edit-toggle-btn">Already sent a request? Edit it →</button>
+      <a class="btn btn-outline" href="/track.html">Already sent a request? Track your order →</a>
     </p>
   </div>
 </section>
@@ -1087,6 +1087,7 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
   </div>
 </footer>
 
+<script src="/js/requests.js"></script>
 <script>
 (function () {
 
@@ -1521,14 +1522,8 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
     });
   }
 
-  /* ---- commission form -> Google Sheet + email ---- */
-  var SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwNp6z4T4IK0rc4pDov04K_e34LGcBSRyInJakBvnW5J8_N0YDDqU6dahdMqWWXX-f3/exec';
-  /* Reads (avg rating + reviews) go through this cached proxy instead of
-     hitting Apps Script directly -- see netlify/functions/reviews.js.
-     Writes (submitting a review, sending/editing a commission) still go
-     straight to SHEET_ENDPOINT above, since those can't be cached. */
+  /* Public review API; order submissions are handled in js/commission.js. */
   var REVIEWS_ENDPOINT = '/.netlify/functions/reviews';
-  var STATS_CACHE_KEY = 'ac_stats_cache_v1';
 
   /* Wraps fetch() with a timeout, so a stuck Apps Script request can't
      leave a button reading "Sending..." forever with no way out. */
@@ -1630,28 +1625,17 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
     return lastReviewCount;
   }
 
-  /* Stale-while-revalidate: paint instantly from whatever we saved last
-     visit (no blank/loading flash), then fetch the real thing in the
-     background and repaint if anything changed. The cached proxy this
-     hits (see REVIEWS_ENDPOINT above) is itself usually answered from
-     Netlify's edge cache in well under 100ms, so this is normally
-     near-instant even on a first visit. */
+  /* Always re-read visible reviews; hidden reviews must not persist in browser storage. */
   function loadLiveStats() {
-    try {
-      var cached = localStorage.getItem(STATS_CACHE_KEY);
-      if (cached) paintStats(JSON.parse(cached));
-    } catch (err) { /* localStorage unavailable (private mode etc.) -- fine, just skip */ }
-
-    return fetchWithTimeout(REVIEWS_ENDPOINT, { cache: 'no-store' }, 8000)
-      .then(function (r) { return r.json(); })
+    return fetchWithTimeout(REVIEWS_ENDPOINT, { cache: 'no-store' }, 55000)
+      .then(function (r) { return r.json().then(function (data) { if (!r.ok) throw new Error(data.error || 'Reviews unavailable'); return data; }); })
       .then(function (data) {
+        document.getElementById('reviews-status').textContent = '';
         var count = paintStats(data);
-        try { localStorage.setItem(STATS_CACHE_KEY, JSON.stringify(data)); } catch (err) {}
         return count;
       })
-      /* If the endpoint isn't reachable, keep whatever is already on the page
-         (either the server-rendered fallback, or the cached snapshot above). */
-      .catch(function () { return lastReviewCount; });
+      /* Keep the current display if the service is temporarily unavailable. */
+      .catch(function () { document.getElementById('reviews-status').textContent = 'Reviews are temporarily unavailable. Please try again later.'; return lastReviewCount; });
   }
   loadLiveStats();
 
@@ -1728,9 +1712,6 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
       if (fbSending) return;
       if (!fbRating) { setFbStatus('Pick a star rating first.', true); return; }
       if (fbTextEl.value.trim().length < 3) { setFbStatus('Add a quick note about your experience.', true); return; }
-      if (!SHEET_ENDPOINT || SHEET_ENDPOINT.indexOf('PASTE_YOUR') !== -1) {
-        setFbStatus('Reviews are not connected yet \u2014 please email us instead.', true); return;
-      }
 
       fbSending = true;
       fbSubmit.disabled = true;
@@ -1745,52 +1726,14 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
         timestamp: new Date().toISOString()
       };
       var body = JSON.stringify({
-        action: 'review',
+        requestId: window.AutheriaRequests.id('review'),
         name: newReview.name,
         rating: newReview.rating,
         text: newReview.text
       });
 
-      /* Apps Script accepts a simple text/plain POST with no CORS preflight.
-         The old version of this just fired the request and, as long as
-         *some* response came back (or the opaque no-cors fallback fired),
-         called it a success -- it never actually checked whether Apps
-         Script confirmed the write. That's exactly the bug behind reviews
-         showing "sent!" on the page but never landing in the Sheet: a
-         misconfigured deployment (wrong access level, stale exec URL,
-         etc.) still returns *a* response -- just not the one we want -- so
-         it was being treated as success every time. Now we verify Apps
-         Script actually echoed back {status:"ok"} before calling this a
-         win, and only fall back to the opaque no-cors POST for a genuine
-         network/CORS-level failure (no response at all), never for a
-         response that reached the server but wasn't the JSON we expect. */
       function postIt() {
-        return fetchWithTimeout(SHEET_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: body
-        }, 12000).then(function (res) {
-          if (!res.ok) {
-            var httpErr = new Error('Review server responded with ' + res.status);
-            httpErr.reachedServer = true;
-            throw httpErr;
-          }
-          return res.json().catch(function () {
-            var parseErr = new Error('Review server sent back something unexpected');
-            parseErr.reachedServer = true;
-            throw parseErr;
-          });
-        }).then(function (data) {
-          if (!data || data.status !== 'ok') {
-            var badErr = new Error('Review server did not confirm the write');
-            badErr.reachedServer = true;
-            throw badErr;
-          }
-          return data;
-        }).catch(function (err) {
-          if (err && err.reachedServer) throw err;
-          return fetch(SHEET_ENDPOINT, { method: 'POST', mode: 'no-cors', body: body });
-        });
+        return window.AutheriaRequests.post(REVIEWS_ENDPOINT, JSON.parse(body));
       }
 
       function resetForm() {
@@ -1804,6 +1747,7 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
 
       postIt()
         .then(function () {
+          window.AutheriaRequests.clear('review');
           fbSending = false;
           fbSubmit.disabled = false;
           fbSubmit.textContent = origText;
@@ -1846,7 +1790,7 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
           fbSubmit.disabled = false;
           fbSubmit.textContent = origText;
           var timedOut = err && err.name === 'AbortError';
-          setFbStatus(timedOut ? 'The review server took too long to respond \u2014 please try again.' : 'Could not reach the review server \u2014 please email us instead.', true);
+          setFbStatus(timedOut ? 'The review server took too long to respond \u2014 please try again.' : (err.message || 'Could not reach the review server. Please try again later.'), true);
         });
     });
   }
@@ -1855,228 +1799,9 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  var form = document.querySelector('form');
-  if (form) {
-    var formInputs = form.querySelectorAll('input');
-    var nameEl = formInputs[0];
-    var emailEl = formInputs[1];
-    var budgetEl = formInputs[2];
-    var refUrlEl = document.getElementById('ref-url-input');
-    var typeEl = form.querySelector('select');
-    var descEl = form.querySelector('textarea');
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      if (!form.reportValidity()) return;
-
-      var submitBtn = form.querySelector('button[type="submit"]');
-      var origBtnText = submitBtn ? submitBtn.textContent : '';
-      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending\u2026'; }
-
-      var payload = {
-        name: nameEl ? nameEl.value.trim() : '',
-        email: emailEl ? emailEl.value.trim() : '',
-        type: typeEl ? typeEl.value : '',
-        budget: budgetEl ? budgetEl.value.trim() : '',
-        description: descEl ? descEl.value.trim() : '',
-        reference: refUrlEl ? refUrlEl.value.trim() : ''
-      };
-
-      /* Build the optional email draft BEFORE resetting the form. */
-      var lines = [];
-      Array.prototype.slice.call(form.querySelectorAll('input, select, textarea')).forEach(function (el) {
-        var wrap = el.closest ? el.closest('.field') : null;
-        var lbl = wrap ? wrap.querySelector('label') : null;
-        if (el.value) lines.push((lbl ? lbl.textContent : '') + ': ' + el.value);
-      });
-      var mailtoUrl = 'mailto:claudiaartwork3@gmail.com?subject=' +
-        encodeURIComponent("Commission request \u2014 Claudia's Community") +
-        '&body=' + encodeURIComponent(lines.join('\n'));
-
-      function finish(ok) {
-        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = origBtnText; }
-        form.reset();
-        var who = payload.name ? (', ' + escapeHtml(payload.name.split(' ')[0])) : '';
-        var mailNote = payload.email
-          ? 'We\u2019ll reply to <strong style="color:var(--cream)">' + escapeHtml(payload.email) + '</strong> as soon as possible \u2014 usually within a day or two \u2014 with a scope, a quote and a timeline.'
-          : 'We\u2019ll reply to the email you gave us as soon as possible, with a scope, a quote and a timeline.';
-        openModal(
-          '<div class="modal-mark">' + (ok ? '\u2713' : '\u2709') + '</div>' +
-          '<h3>Thanks' + who + '!</h3>' +
-          '<p class="hi">' + (ok
-            ? 'Your commission request is in. '
-            : 'We couldn\u2019t confirm the request reached our queue \u2014 please send it by email using the button below so nothing gets lost. ') +
-          mailNote + '</p>' +
-          '<p>While you wait, come hang out in our Discord \u2014 it\u2019s the fastest place to ask questions, see work in progress, and nudge us if you think of something to add.</p>' +
-          '<div class="modal-actions">' +
-          '<a class="btn btn-primary" href="https://discord.gg/s4yKc3pquJ" target="_blank" rel="noopener noreferrer">Join our Discord community</a>' +
-          '<a class="btn btn-outline" href="' + mailtoUrl + '">Also open an email draft</a>' +
-          '<button type="button" class="btn btn-outline" data-close>Close</button>' +
-          '</div>' +
-          '<p class="modal-note">Need to change something? Scroll down to \u201cAlready sent a request? Edit it\u201d and enter the same name + email, or just email <a href="mailto:claudiaartwork3@gmail.com">claudiaartwork3@gmail.com</a>.</p>'
-        );
-      }
-
-      if (!SHEET_ENDPOINT || SHEET_ENDPOINT.indexOf('PASTE_YOUR') !== -1) { finish(false); return; }
-
-      /* Same verified-success pattern as the review form above: a request
-         that reaches the server but comes back as an error, or without the
-         {status:"ok"} Apps Script sends on a real write, must NOT be
-         treated as success just because fetch() didn't throw. Only fall
-         back to the opaque no-cors POST for a genuine network/CORS-level
-         failure (no response reached us at all). */
-      fetchWithTimeout(SHEET_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
-      }, 12000).then(function (res) {
-        if (!res.ok) {
-          var httpErr = new Error('Commission server responded with ' + res.status);
-          httpErr.reachedServer = true;
-          throw httpErr;
-        }
-        return res.json().catch(function () {
-          var parseErr = new Error('Commission server sent back something unexpected');
-          parseErr.reachedServer = true;
-          throw parseErr;
-        });
-      }).then(function (data) {
-        if (!data || data.status !== 'ok') {
-          var badErr = new Error('Commission server did not confirm the write');
-          badErr.reachedServer = true;
-          throw badErr;
-        }
-        finish(true);
-      }).catch(function (err) {
-        if (err && err.reachedServer) { finish(false); return; }
-        /* CORS blocked reading the reply, or it timed out - fire it
-           opaquely once more and trust it rather than leaving the person
-           stuck on "Sending..." indefinitely. */
-        fetchWithTimeout(SHEET_ENDPOINT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) }, 12000)
-          .then(function () { finish(true); })
-          .catch(function () { finish(false); });
-      });
-    });
-  }
-
-  /* ---- edit an already-sent request (lookup by name + email, no ID needed) ---- */
-  (function () {
-    var toggleBtn = document.getElementById('edit-toggle-btn');
-    if (!toggleBtn) return;
-
-    function findFormHtml(status) {
-      return (
-        '<h3>Edit your request</h3>' +
-        '<p class="hi">Enter the name and email you used when you sent it, and we\u2019ll pull it up so you can change anything before we start.</p>' +
-        '<div class="form-grid" style="margin-top:6px">' +
-        '<div class="field"><label>Your name</label><input id="er-name" placeholder="e.g. Alex"/></div>' +
-        '<div class="field"><label>Your email</label><input id="er-email" type="email" placeholder="you@example.com"/></div>' +
-        '</div>' +
-        (status ? '<p class="rate-status" style="margin-top:10px">' + status + '</p>' : '') +
-        '<div class="modal-actions">' +
-        '<button type="button" class="btn btn-primary" data-find>Find my request</button>' +
-        '<button type="button" class="btn btn-outline" data-close>Cancel</button>' +
-        '</div>'
-      );
-    }
-
-    function editFormHtml(order, status) {
-      var typeOptions = ['PFP / Banner', 'Character Illustration', '3D Model', 'Streaming Assets / Emotes', 'Animation', 'Other'];
-      var optsHtml = typeOptions.map(function (t) {
-        return '<option' + (t === order.type ? ' selected' : '') + '>' + escapeHtml(t) + '</option>';
-      }).join('');
-      return (
-        '<h3>Update your request</h3>' +
-        '<p class="hi">Found it \u2014 change whatever you need and save.</p>' +
-        '<div class="form-grid" style="margin-top:6px">' +
-        '<div class="field"><label>Commission type</label><select id="er-type">' + optsHtml + '</select></div>' +
-        '<div class="field"><label>Budget (optional)</label><input id="er-budget" value="' + escapeHtml(order.budget || '') + '"/></div>' +
-        '</div>' +
-        '<div class="field" style="margin-top:12px"><label>Character description</label><textarea id="er-desc" rows="4">' + escapeHtml(order.description || '') + '</textarea></div>' +
-        '<div class="field" style="margin-top:12px"><label>Reference image URL(s)</label><input id="er-ref" value="' + escapeHtml(order.reference || '') + '"/></div>' +
-        (status ? '<p class="rate-status" style="margin-top:10px">' + status + '</p>' : '') +
-        '<div class="modal-actions">' +
-        '<button type="button" class="btn btn-primary" data-save>Save changes</button>' +
-        '<button type="button" class="btn btn-outline" data-close>Cancel</button>' +
-        '</div>'
-      );
-    }
-
-    var foundOrder = null; // { id, name, email, ... } once a lookup succeeds
-
-    toggleBtn.addEventListener('click', function () {
-      foundOrder = null;
-      openModal(findFormHtml(''));
-    });
-
-    modal.addEventListener('click', function (e) {
-      var body = modal.querySelector('.modal-body');
-      if (!body || !body.querySelector('#er-name, #er-desc')) return; // not this feature's modal content
-
-      if (e.target.hasAttribute('data-find')) {
-        var name = (body.querySelector('#er-name') || {}).value || '';
-        var email = (body.querySelector('#er-email') || {}).value || '';
-        name = name.trim(); email = email.trim();
-        if (!name || !email) {
-          body.innerHTML = findFormHtml('<span style="color:var(--magenta)">Please fill in both your name and email.</span>');
-          return;
-        }
-        var btn = e.target; btn.disabled = true; btn.textContent = 'Looking…';
-        var url = SHEET_ENDPOINT + '?action=findOrder&name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email);
-        fetchWithTimeout(url, { cache: 'no-store' }, 10000)
-          .then(function (r) { return r.json(); })
-          .then(function (data) {
-            if (data.status !== 'ok') {
-              body.innerHTML = findFormHtml('<span style="color:var(--magenta)">' + escapeHtml(data.message || 'Not found.') + '</span>');
-              return;
-            }
-            foundOrder = data.order;
-            body.innerHTML = editFormHtml(foundOrder, '');
-          })
-          .catch(function () {
-            body.innerHTML = findFormHtml('<span style="color:var(--magenta)">Couldn\u2019t reach the server \u2014 try again in a moment.</span>');
-          });
-      }
-
-      if (e.target.hasAttribute('data-save') && foundOrder) {
-        var typeEl = body.querySelector('#er-type'), budgetEl = body.querySelector('#er-budget'),
-            descEl = body.querySelector('#er-desc'), refEl = body.querySelector('#er-ref');
-        var payload = {
-          action: 'updateOrder',
-          id: foundOrder.id,
-          name: foundOrder.name,
-          email: foundOrder.email,
-          type: typeEl ? typeEl.value : foundOrder.type,
-          budget: budgetEl ? budgetEl.value.trim() : '',
-          description: descEl ? descEl.value.trim() : '',
-          reference: refEl ? refEl.value.trim() : ''
-        };
-        var saveBtn = e.target; saveBtn.disabled = true; saveBtn.textContent = 'Saving…';
-        fetchWithTimeout(SHEET_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        }, 12000)
-          .then(function (r) { return r.json(); })
-          .then(function (data) {
-            if (data.status !== 'ok') {
-              body.innerHTML = editFormHtml(foundOrder, '<span style="color:var(--magenta)">' + escapeHtml(data.message || 'Could not save \u2014 try again.') + '</span>');
-              return;
-            }
-            body.innerHTML =
-              '<div class="modal-mark">\u2713</div>' +
-              '<h3>Updated!</h3>' +
-              '<p class="hi">Your changes are saved \u2014 we\u2019ll take the new version into account.</p>' +
-              '<div class="modal-actions"><button type="button" class="btn btn-primary" data-close>Close</button></div>';
-          })
-          .catch(function () {
-            body.innerHTML = editFormHtml(foundOrder, '<span style="color:var(--magenta)">Couldn\u2019t reach the server \u2014 try again in a moment.</span>');
-          });
-      }
-    });
-  })();
 })();
 
 </script>
+<script src="/js/commission.js"></script>
 <script src="/js/autheria-chatbot-widget.js"></script>
 </body></html>

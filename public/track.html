@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="no-referrer">
+  <title>Track your order — Claudia's Community</title>
+  <link rel="stylesheet" href="/css/tracking.css">
+  <script defer src="/js/requests.js"></script>
+  <script defer src="/js/tracking.js"></script>
+</head>
+<body>
+  <header><a href="/">Claudia's Community</a><a href="/#cta">Contact Claudia</a></header>
+  <main>
+    <p class="eyebrow">Your creative journey</p>
+    <h1>Track your order.</h1>
+    <p class="intro">A little window into your commission's progress. Keep your tracking link private.</p>
+    <p id="tracking-status" role="status" aria-live="polite"></p>
+    <section id="order-card" class="card" aria-labelledby="order-number" hidden>
+      <p class="eyebrow">Your commission</p>
+      <h2 id="order-number"></h2>
+      <p id="order-type"></p>
+      <p class="badge" id="order-status"></p>
+      <ol class="steps" aria-label="Commission progress"><li>Received</li><li>Contacted</li><li>In progress</li><li>Completed</li></ol>
+      <h3>A note from Claudia</h3><p id="order-message" class="message"></p>
+      <p class="muted" id="order-updated"></p>
+      <button id="refresh-order" type="button">Refresh status</button>
+      <p class="muted">Need to change something? <a href="mailto:claudiaartwork3@gmail.com">Contact Claudia</a>.</p>
+    </section>
+    <p id="save-link" hidden>Your new private link: <a id="new-tracking-link">Save this tracking link</a>. Bookmark this link or copy its address before leaving this page.</p>
+    <section id="confirm-card" class="card" hidden aria-labelledby="confirm-heading">
+      <h2 id="confirm-heading">Recover this order's access</h2>
+      <p>Confirm to create a new tracking link. The previous link for this order will stop working.</p>
+      <p class="muted">This recovery link expires after 15 minutes and works once.</p>
+      <button id="confirm-recovery" type="button">Confirm recovery</button>
+    </section>
+    <section class="card" aria-labelledby="recover-heading">
+      <h2 id="recover-heading">Can't find your link?</h2>
+      <p>Enter the email used for your commission. We'll send instructions for your orders.</p>
+      <form id="recovery-form">
+        <label for="recovery-email">Your email</label>
+        <input id="recovery-email" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com">
+        <button type="submit">Send recovery email</button>
+        <p id="recovery-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+    <p class="muted">For questions, email <a href="mailto:claudiaartwork3@gmail.com">claudiaartwork3@gmail.com</a>.</p>
+  </main>
+</body>
+</html>

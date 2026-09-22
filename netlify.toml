@@ -6,6 +6,12 @@
   functions = "netlify/functions"
   publish = "dist"
 
+[dev]
+  framework = "#static"
+  publish = "public"
+  port = 8888
+  autoLaunch = false
+
 # ---- Caching ---------------------------------------------------------
 # Images and video are named uniquely per asset and never change in place,
 # so browsers and Netlify's CDN can cache them essentially forever. This
@@ -33,9 +39,17 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# Never let search engines or caches serve a stale copy of admin pages.
+# Tracking pages never send referrers or allow third-party scripts.
 [[headers]]
-  for = "/admin/*"
+  for = "/track.html"
   [headers.values]
     Cache-Control = "no-store"
-    X-Robots-Tag = "noindex, nofollow"
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    Referrer-Policy = "no-referrer"
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
+
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Cache-Control = "no-store"
+    Referrer-Policy = "no-referrer"

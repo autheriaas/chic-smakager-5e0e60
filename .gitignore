@@ -13,6 +13,9 @@ node_modules/
 dist/
 build/
 coverage/
+test-results/
+playwright-report/
+reports/
 *.log
 
 # Local editor and operating system files

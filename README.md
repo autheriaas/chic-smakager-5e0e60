@@ -1,55 +1,63 @@
-# Autheria / Claudia's Community
+﻿# Autheria / Claudia's Community
 
-Site de portfólio e encomendas em HTML, CSS e JavaScript, com Netlify Functions e Google Apps Script.
+Site de portfolio e encomendas com acompanhamento privado, Netlify Functions e Google Sheets.
 
 ## Estrutura
 
 ```text
-public/                  Arquivos enviados ao navegador
-  index.html             Página principal (inclui CSS e scripts próprios)
-  terms.html             Termos
-  admin/                 Interface administrativa existente, até sua remoção planejada
-  assets/                Imagens, ícones e vídeos
-  js/                    JavaScript separado, incluindo o chatbot
-  robots.txt
-  sitemap.xml
-netlify/functions/       Código executado no servidor pela Netlify
-apps-script/Code.gs       Código publicado separadamente no Google Apps Script
-scripts/build.mjs        Geração do diretório público de distribuição
-docs/                    Planejamento e documentação
-dist/                    Build gerado; ignorado pelo Git
-netlify.toml             Configuração de build, Functions e headers
-.env.example             Nomes das variáveis, sem valores secretos
+public/                 Site publico: home, termos, track.html, css/, js/, assets/
+netlify/functions/      Endpoints: orders, reviews e chat
+server/                 Validacao e comunicacao privada com Apps Script
+apps-script/Code.gs      Backend Google Sheets e migracao
+scripts/                Build estatico
+tests/                  Testes Node e navegador com planilha/e-mails simulados
+docs/                   Plano, operacao e publicacao
+dist/                   Build gerado; ignorado pelo Git
 ```
 
-## Build
+## Ambiente e comandos
 
-Requer Node.js 20 ou superior. O build não depende de pacotes externos.
+Node 24.21.0 LTS (`.nvmrc`), Netlify CLI 27.8.0. No NVM para Windows:
 
-```sh
+```powershell
+nvm install 24.21.0
+nvm use 24.21.0
+npm ci
+npm run dev
+```
+
+Abra http://localhost:8888. `public/` e servido diretamente; atualize a pagina para ver alteracoes. As Functions ficam em `/.netlify/functions/`. Ctrl+C encerra o servidor. `--offline` evita vincular conta e carregar configuracao remota da Netlify; nao bloqueia chamadas a servicos externos.
+
+```powershell
+npm test
+npx playwright install chromium
+npm run test:browser
 npm run build
 ```
 
-Edite os fontes em `public/`, nunca os arquivos em `dist/`. O comando recria `dist/` copiando somente `public/`. Arquivos ocultos, links simbólicos e extensões inesperadas interrompem o build. Mesmo assim, todo conteúdo em `public/` deve ser próprio para divulgação: nunca coloque credenciais ou fontes de servidor ali.
+O build recria `dist/` apenas a partir de `public/`. A Netlify executa `npm run build`, publica `dist/` e empacota `netlify/functions/` separadamente. Nao edite `dist/` nem envie a raiz por upload manual. Nunca coloque segredos em `public/`.
 
-## Netlify
+A dependencia transitiva `sharp` tem override para 0.35.4, corrigindo alertas da versao incluída pela CLI. Reavaliar o override ao atualizar Netlify CLI. Ferramentas de desenvolvimento nao sao copiadas para `dist/`.
 
-Use a raiz do repositório como diretório base. O `netlify.toml` configura:
+## Configuracao
 
-- Build: `npm run build`.
-- Publicação estática: `dist`.
-- Functions: `netlify/functions`, fora do diretório público.
+Copie `.env.example` para `.env` sem sobrescrever arquivos existentes. Preencha:
 
-As URLs das páginas e mídias foram preservadas; o chatbot agora usa `/js/autheria-chatbot-widget.js`. Os endpoints continuam em `/.netlify/functions/`.
+- `APPS_SCRIPT_URL`: deployment **de teste** do Apps Script para uso local.
+- `BACKEND_SECRET`: segredo novo, aleatorio, igual a propriedade de mesmo nome no Apps Script.
+- `SITE_URL`: origem HTTPS do site de acompanhamento, igual nos dois ambientes.
+- `GEMINI_API_KEY`: somente para o chatbot existente.
 
-Para prévia das integrações locais, use Netlify Dev com as variáveis necessárias. Um servidor estático sozinho não executa as Functions. O build local não publica o site nem altera o Apps Script.
+Reinicie o servidor apos alterar variaveis. Sem configuracao, pedidos e reviews retornam 503; nao ha fallback para a planilha de producao. O `.env` e ignorado pelo Git.
 
-Configure as variáveis listadas em `.env.example` na Netlify. Enquanto o admin existir, `ADMIN_DELETE_SECRET` deve coincidir com a propriedade `ADMIN_SECRET` do Apps Script. Credenciais reais ficam fora deste repositório e de `public/`.
+**Functions locais ainda podem escrever na planilha apontada por `APPS_SCRIPT_URL`.** Use uma copia da planilha e um deployment separado. Os testes automatizados substituem planilha, e-mails e rede: nao acessam dados reais.
 
-Não envie a raiz inteira por upload manual. Um upload estático apenas de `dist/` também não substitui o deploy das Functions: prefira o fluxo de build/deploy da Netlify a partir do repositório.
+## Fluxo atual
 
-Referência: [configuração de build da Netlify](https://docs.netlify.com/build/configure-builds/file-based-configuration/).
+O cliente envia uma encomenda e recebe um link privado somente de leitura. A artista altera status/mensagem e visibilidade de reviews no Sheets. Recuperacao por e-mail entra em fila, processada a cada minuto: os links enviados duram 15 minutos; confirmar um deles substitui o acesso daquele pedido. O admin e a edicao publica foram removidos.
 
-## Próximas mudanças
+Leia [Operacao e publicacao](docs/OPERACAO-E-PUBLICACAO.md) antes de ativar o backend. Editar `apps-script/Code.gs` localmente nao atualiza o Apps Script publicado.
 
-O [plano de acompanhamento de pedidos](docs/PLANO-ACOMPANHAMENTO-PEDIDOS.md) descreve a remoção do admin e a adoção de acompanhamento privado. A reorganização de pastas não implementa esse fluxo.
+O [plano original](docs/PLANO-ACOMPANHAMENTO-PEDIDOS.md) registra decisoes e a lista de validacao. A implementacao local nao significa que os servicos ja foram migrados.
+
+Referencias: [Netlify Dev](https://docs.netlify.com/api-and-cli-guides/cli-guides/local-development/), [configuracao do build](https://docs.netlify.com/build/configure-builds/file-based-configuration/).

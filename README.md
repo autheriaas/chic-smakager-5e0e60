@@ -1,23 +1,23 @@
-﻿# Autheria / Claudia's Community
+# Autheria / Claudia's Community
 
-Site de portfolio e encomendas com acompanhamento privado, Netlify Functions e Google Sheets.
+Portfolio and art-commission site with private order tracking, Netlify Functions, and Google Sheets.
 
-## Estrutura
+## Project structure
 
 ```text
-public/                 Site publico: home, termos, track.html, css/, js/, assets/
-netlify/functions/      Endpoints: orders, reviews e chat
-server/                 Validacao e comunicacao privada com Apps Script
-apps-script/Code.gs      Backend Google Sheets e migracao
-scripts/                Build estatico
-tests/                  Testes Node e navegador com planilha/e-mails simulados
-docs/                   Plano, operacao e publicacao
-dist/                   Build gerado; ignorado pelo Git
+public/                 Public site: home, terms, track.html, css/, js/, assets/
+netlify/functions/      Endpoints: orders, reviews, and chat
+server/                 Validation and private Apps Script communication
+apps-script/Code.gs     Google Sheets backend and migration
+scripts/                Static build
+tests/                  Node and browser tests using mocked sheets and email
+docs/                   Plan, operations, and publishing documentation
+dist/                   Generated build; ignored by Git
 ```
 
-## Ambiente e comandos
+## Environment and commands
 
-Node 24.21.0 LTS (`.nvmrc`), Netlify CLI 27.8.0. No NVM para Windows:
+Node 24.21.0 LTS (`.nvmrc`) and Netlify CLI 27.8.0 are required. With NVM for Windows:
 
 ```powershell
 nvm install 24.21.0
@@ -26,7 +26,7 @@ npm ci
 npm run dev
 ```
 
-Abra http://localhost:8888. `public/` e servido diretamente; atualize a pagina para ver alteracoes. As Functions ficam em `/.netlify/functions/`. Ctrl+C encerra o servidor. `--offline` evita vincular conta e carregar configuracao remota da Netlify; nao bloqueia chamadas a servicos externos.
+Open http://localhost:8888. `public/` is served directly; reload after edits. Functions are available under `/.netlify/functions/`. Ctrl+C stops the server. `--offline` avoids linking a Netlify account and loading remote Netlify configuration; it does not block external services.
 
 ```powershell
 npm test
@@ -35,29 +35,29 @@ npm run test:browser
 npm run build
 ```
 
-O build recria `dist/` apenas a partir de `public/`. A Netlify executa `npm run build`, publica `dist/` e empacota `netlify/functions/` separadamente. Nao edite `dist/` nem envie a raiz por upload manual. Nunca coloque segredos em `public/`.
+The build recreates `dist/` from `public/` only. Netlify runs `npm run build`, publishes `dist/`, and packages `netlify/functions/` separately. Do not edit `dist/` or upload the repository root manually. Never put secrets in `public/`.
 
-A dependencia transitiva `sharp` tem override para 0.35.4, corrigindo alertas da versao incluída pela CLI. Reavaliar o override ao atualizar Netlify CLI. Ferramentas de desenvolvimento nao sao copiadas para `dist/`.
+The transitive `sharp` dependency is overridden to 0.35.4 to address alerts from the version included by the CLI. Re-evaluate the override when updating Netlify CLI. Development tooling is not copied to `dist/`.
 
-## Configuracao
+## Configuration
 
-Copie `.env.example` para `.env` sem sobrescrever arquivos existentes. Preencha:
+Copy `.env.example` to `.env` without overwriting an existing file. Set:
 
-- `APPS_SCRIPT_URL`: deployment **de teste** do Apps Script para uso local.
-- `BACKEND_SECRET`: segredo novo, aleatorio, igual a propriedade de mesmo nome no Apps Script.
-- `SITE_URL`: origem HTTPS do site de acompanhamento, igual nos dois ambientes.
-- `GEMINI_API_KEY`: somente para o chatbot existente.
+- `APPS_SCRIPT_URL`: the **test** Apps Script deployment used from local development.
+- `BACKEND_SECRET`: a new random secret, identical to the Apps Script property with the same name.
+- `SITE_URL`: the HTTPS origin of the tracking site, identical in both environments.
+- `GEMINI_API_KEY`: only for the existing chatbot.
 
-Reinicie o servidor apos alterar variaveis. Sem configuracao, pedidos e reviews retornam 503; nao ha fallback para a planilha de producao. O `.env` e ignorado pelo Git.
+Restart the local server after changing variables. Without configuration, orders and reviews return 503; there is no production-sheet fallback. `.env` is ignored by Git.
 
-**Functions locais ainda podem escrever na planilha apontada por `APPS_SCRIPT_URL`.** Use uma copia da planilha e um deployment separado. Os testes automatizados substituem planilha, e-mails e rede: nao acessam dados reais.
+**Local Functions can still write to the sheet configured by `APPS_SCRIPT_URL`.** Use a copied spreadsheet and a separate deployment. Automated tests replace the sheet, email, and network; they do not access real data.
 
-## Fluxo atual
+## Current flow
 
-O cliente envia uma encomenda e recebe um link privado somente de leitura. A artista altera status/mensagem e visibilidade de reviews no Sheets. Recuperacao por e-mail entra em fila, processada a cada minuto: os links enviados duram 15 minutos; confirmar um deles substitui o acesso daquele pedido. O admin e a edicao publica foram removidos.
+A client submits a commission and receives a private, read-only link. The artist changes status, client message, and review visibility in Sheets. Email recovery is queued and processed once a minute: recovery links last 15 minutes, and confirming one replaces access to that order. The admin area and public editing were removed.
 
-Leia [Operacao e publicacao](docs/OPERACAO-E-PUBLICACAO.md) antes de ativar o backend. Editar `apps-script/Code.gs` localmente nao atualiza o Apps Script publicado.
+Read [operations and publishing](docs/OPERATIONS-AND-PUBLISHING.md) before enabling the backend. Editing `apps-script/Code.gs` locally does not update the published Apps Script.
 
-O [plano original](docs/PLANO-ACOMPANHAMENTO-PEDIDOS.md) registra decisoes e a lista de validacao. A implementacao local nao significa que os servicos ja foram migrados.
+The [original plan](docs/ORDER-TRACKING-PLAN.md) records the decisions and validation checklist. A local implementation does not mean external services have already been migrated.
 
-Referencias: [Netlify Dev](https://docs.netlify.com/api-and-cli-guides/cli-guides/local-development/), [configuracao do build](https://docs.netlify.com/build/configure-builds/file-based-configuration/).
+References: [Netlify Dev](https://docs.netlify.com/api-and-cli-guides/cli-guides/local-development/), [build configuration](https://docs.netlify.com/build/configure-builds/file-based-configuration/).

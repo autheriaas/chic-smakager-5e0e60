@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terms &amp; Conditions — Claudia's Community</title>
+<meta name="description" content="Terms and conditions for commissioning custom art from Claudia's Community.">
+<meta name="robots" content="noindex, follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="assets/meta/favicon.ico">
+<style>
+  :root {
+    --bg: #1a1226;
+    --bg-soft: #241832;
+    --card: #2b1d3e;
+    --border: rgba(255,255,255,0.08);
+    --text: #f2ecf9;
+    --text-dim: #c9bdd9;
+    --accent: #e6a8d7;
+    --accent-2: #a78bfa;
+    --pill-no: #3a1b28;
+    --pill-no-text: #ff9db3;
+    --pill-yes: #1c2f2a;
+    --pill-yes-text: #8ee6c3;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+  .wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 48px 20px 80px;
+  }
+  .topnav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 780px;
+    margin: 0 auto 36px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .topnav .logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  .topnav .brand {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--text);
+  }
+  .topnav .navlink {
+    margin-left: auto;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  header.hero {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .badge {
+    display: inline-block;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    margin: 0 0 8px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .sub {
+    color: var(--text-dim);
+    font-size: 0.98rem;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .plain-note {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin: 28px 0 0;
+    font-size: 0.92rem;
+    color: var(--text-dim);
+  }
+  section.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 26px;
+    margin-top: 22px;
+    opacity: 1;
+    transform: none;
+  }
+  section.card h2 {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  section.card h2 .num {
+    width: 30px;
+    height: 30px;
+    flex: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #1a1226;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+  }
+  section.card p, section.card li { color: var(--text-dim); font-size: 0.98rem; }
+  section.card ul { margin: 10px 0 0; padding-left: 20px; }
+  section.card li { margin-bottom: 6px; }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 16px;
+  }
+  @media (max-width: 560px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+  .pill-box {
+    border-radius: 14px;
+    padding: 16px;
+    border: 1px solid var(--border);
+  }
+  .pill-box.no { background: var(--pill-no); }
+  .pill-box.yes { background: var(--pill-yes); }
+  .pill-box .label {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+  .pill-box.no .label { color: var(--pill-no-text); }
+  .pill-box.yes .label { color: var(--pill-yes-text); }
+  .pill-box p { color: inherit; margin: 0; font-size: 0.92rem; opacity: 0.9; }
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .tag {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+  }
+  .payment-flow {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+  }
+  @media (max-width: 620px) {
+    .payment-flow { grid-template-columns: 1fr; }
+  }
+  .step {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    text-align: center;
+    transition: transform 0.2s ease;
+  }
+  .step:hover { transform: translateY(-3px); }
+  .step .n {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 1.4rem;
+  }
+  .step .t { font-size: 0.9rem; color: var(--text-dim); margin-top: 4px; }
+  a.linkbtn {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.92rem;
+    border-bottom: 1px dashed var(--accent);
+    transition: opacity 0.2s ease;
+  }
+  a.linkbtn:hover { opacity: 0.7; }
+  footer {
+    text-align: center;
+    margin-top: 44px;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  section.card {
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  section.card:hover {
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent), 0 12px 30px -12px color-mix(in srgb, var(--accent) 55%, transparent);
+    border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  .tag { transition: transform 0.2s ease, background 0.2s ease; }
+  .tag:hover { transform: translateY(-2px); background: color-mix(in srgb, var(--accent) 20%, var(--bg-soft)); }
+  a.tag.social { text-decoration: none; display: inline-block; }
+
+  /* ---- custom trailing cursor (fine pointers only) ---- */
+  html.custom-cursor-active, html.custom-cursor-active * { cursor: none !important; }
+  .cursor-dot { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1000010; border-radius: 50%; transform: translate(-50%, -50%); }
+  .cursor-dot { width: 8px; height: 8px; background: var(--accent); box-shadow: 0 0 10px var(--accent); transition: opacity .35s ease; }
+  .cursor-dot.cursor-idle { opacity: 0; }
+  @media (prefers-reduced-motion: reduce) { .cursor-dot { display: none !important; } }
+  @media (pointer: coarse) { .cursor-dot { display: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="topnav">
+    <img src="assets/images/wildcut-logo.png" alt="Claudia's Community logo" class="logo">
+    <span class="brand">Claudia's Community</span>
+    <a class="navlink" href="index.html">← Back to site</a>
+  </nav>
+
+  <header class="hero">
+    <span class="badge">Claudia's Community</span>
+    <h1>Terms &amp; Conditions</h1>
+    <p class="sub">Simple, plain-language terms for anyone commissioning custom art — please read before booking a slot.</p>
+  </header>
+
+  <div class="plain-note">
+    💡 <strong>In short:</strong> tell me what you need → I quote a price → you pay a deposit to lock in your spot → I create the piece → you pay the rest and get your files. No NSFW work, ever.
+  </div>
+
+  <section class="card">
+    <h2><span class="num">1</span> What I create</h2>
+    <p>I'm a digital artist specializing in cute character-style designs. I take on a wide range of commissions, including:</p>
+    <div class="tag-list">
+      <span class="tag">PFPs</span>
+      <span class="tag">Banners</span>
+      <span class="tag">Logos</span>
+      <span class="tag">Overlays</span>
+      <span class="tag">Stream alerts</span>
+      <span class="tag">2D art</span>
+      <span class="tag">3D models</span>
+      <span class="tag">VTuber models</span>
+      <span class="tag">VRChat avatars</span>
+      <span class="tag">Emotes</span>
+    </div>
+    <div class="two-col">
+      <div class="pill-box yes">
+        <div class="label">✔ I'm open to</div>
+        <p>Pretty much any commission that fits the list above, in any style — big or small, simple or detailed.</p>
+      </div>
+      <div class="pill-box no">
+        <div class="label">✘ I do not create</div>
+        <p>NSFW / explicit content of any kind. This is a strict, no-exceptions policy.</p>
+      </div>
+    </div>
+    <p style="margin-top:16px;">Want to see examples first? Check out my portfolio:</p>
+    <a class="linkbtn" href="index.html#portfolio">→ View my portfolio</a>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">2</span> Pricing &amp; quotes</h2>
+    <p>There's no fixed price list — my prices depend on what you need and how complex the work is. Every project gets a fair quote based on its own scope.</p>
+    <p><strong>How it works:</strong> before we talk numbers, I'll ask you a few basic questions about what you're looking for (type of piece, style, references, etc.). Once I understand the scope, I'll send you a price.</p>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">3</span> Payment policy</h2>
+    <p>To lock in your commission slot, an upfront deposit is required before work begins:</p>
+    <div class="pill-box yes" style="margin-top:12px;">
+      <div class="label">Deposit required</div>
+      <p style="font-size:1rem;">Whichever is <strong>greater</strong> of:</p>
+      <ul style="padding-left:18px; margin-top:6px;">
+        <li>a flat <strong>$15–$30</strong> minimum, <em>or</em></li>
+        <li><strong>30–40%</strong> of the total quoted price</li>
+      </ul>
+    </div>
+    <p style="margin-top:14px;">The <strong>remaining balance</strong> is due once you receive your first draft, or once you've received your own payment — whichever applies to your situation. If your circumstances don't fit either case, just message me and we'll figure out a fair arrangement together.</p>
+    <div class="payment-flow">
+      <div class="step"><div class="n">1</div><div class="t">Deposit paid → slot secured</div></div>
+      <div class="step"><div class="n">2</div><div class="t">Work begins</div></div>
+      <div class="step"><div class="n">3</div><div class="t">First draft delivered → remaining balance due</div></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">4</span> Revisions</h2>
+    <p>Revisions are <strong>unlimited</strong> while a piece is in progress — but once you approve a stage (sketch, lineart, colors, etc.), that stage is locked in. Going back to redo an already-approved stage counts as new work rather than a free revision.</p>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">5</span> Cancellations &amp; refunds</h2>
+    <div class="two-col">
+      <div class="pill-box yes">
+        <div class="label">✔ Refundable</div>
+        <p>If work hasn't started yet, your deposit can be refunded if you need to cancel.</p>
+      </div>
+      <div class="pill-box no">
+        <div class="label">✘ Non-refundable</div>
+        <p>Once I've been approved to start and have begun working, the deposit is non-refundable.</p>
+      </div>
+    </div>
+    <p style="margin-top:14px;">Every cancellation is a little different, so if something comes up, message me and we'll sort out what's fair for the situation.</p>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">6</span> Usage rights &amp; portfolio</h2>
+    <p>Once your piece is delivered, you're free to use it for <strong>both personal and commercial purposes</strong> (merch, branding, etc.) at no extra charge.</p>
+    <p>In return, I'd like to be able to share the finished piece (and work-in-progress shots) on my portfolio and socials — <strong>I'll always ask your permission first</strong> before posting anything.</p>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">7</span> Timeline &amp; rush orders</h2>
+    <p>I don't drop clients from the queue for going quiet — I'll always wait for a response, however long it takes, no deadline attached.</p>
+    <p>Need your piece sooner than your place in the queue allows? A <strong>rush fee</strong> (flat or percentage, depending on scope) can move you up.</p>
+    <p style="margin-top:10px;">Once a price is quoted, it's <strong>locked in</strong> — it won't change unless you add extra scope (more characters, extra detail, etc.), in which case the price adjusts to match.</p>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">8</span> A note on AI</h2>
+    <p>My work is created by hand. AI tools are used only rarely, as a small part of my own process — never to generate the final artwork. If you'd prefer I don't use any AI assistance on your piece at all, just let me know and I won't.</p>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">9</span> My right to decline</h2>
+    <p>I reserve the right to turn down a commission that goes against my policies (for example, NSFW requests). If I decline, your deposit is refunded in full.</p>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">10</span> Questions?</h2>
+    <p>If anything here is unclear, or your situation doesn't quite fit these terms, just reach out before booking — I'm happy to talk it through.</p>
+    <a class="linkbtn" href="mailto:claudiaartwork3@gmail.com">✉ claudiaartwork3@gmail.com</a>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">✦</span> Find me elsewhere</h2>
+    <div class="tag-list">
+      <a class="tag social" href="mailto:claudiaartwork3@gmail.com">✉ Email</a>
+      <a class="tag social" href="https://discord.gg/s4yKc3pquJ" target="_blank" rel="noopener">◈ Discord</a>
+      <a class="tag social" href="https://x.com/Cozy_Claudia" target="_blank" rel="noopener">𝕏 @Cozy_Claudia</a>
+      <a class="tag social" href="https://www.instagram.com/autherias_community/" target="_blank" rel="noopener">📷 Instagram</a>
+      <a class="tag social" href="index.html" target="_blank" rel="noopener">▦ Portfolio</a>
+      <a class="tag social" href="https://autheria.my.canva.site" target="_blank" rel="noopener">▦ Full Portfolio (Canva)</a>
+    </div>
+  </section>
+
+  <footer>
+    By commissioning a piece, you agree to the terms above. · <a href="index.html">Back to Claudia's Community</a>
+  </footer>
+
+</div>
+<script>
+(function () {
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+  if (prefersReducedMotion || !hasFinePointer) return;
+
+  /* Dot only -- the lagging ring around it was cut per feedback that it
+     was distracting; just the small dot remains. */
+  document.documentElement.classList.add('custom-cursor-active');
+  var cursorDot = document.createElement('div'); cursorDot.className = 'cursor-dot';
+  document.body.appendChild(cursorDot);
+
+  var idleTimer = null;
+  function markActive() {
+    cursorDot.classList.remove('cursor-idle');
+    if (idleTimer) clearTimeout(idleTimer);
+    idleTimer = setTimeout(function () {
+      cursorDot.classList.add('cursor-idle');
+    }, 1500);
+  }
+  document.addEventListener('mousemove', function (e) {
+    cursorDot.style.transform = 'translate(' + e.clientX + 'px,' + e.clientY + 'px) translate(-50%,-50%)';
+    markActive();
+  });
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) cursorDot.classList.add('cursor-idle');
+  });
+  window.addEventListener('blur', function () {
+    cursorDot.classList.add('cursor-idle');
+  });
+  document.addEventListener('mouseleave', function () {
+    cursorDot.classList.add('cursor-idle');
+  });
+  document.addEventListener('mouseenter', function () { markActive(); });
+})();
+</script>
+</body></html>

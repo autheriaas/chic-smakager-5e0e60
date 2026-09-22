@@ -2,6 +2,8 @@
 
 Data: 22/09/2026.
 
+Atualização de organização: os caminhos da análise abaixo são históricos. Os arquivos públicos agora estão em `public/` (chatbot em `public/js/`), o Apps Script em `apps-script/Code.gs` e este plano em `docs/`. As Functions continuam em `netlify/functions/`. `npm run build` gera `dist/`, único diretório de publicação estática configurado na Netlify. As credenciais fixas já foram retiradas, e o admin exige variáveis de ambiente. O fluxo novo de pedidos ainda não foi implementado.
+
 Status: plano aprovado conceitualmente e salvo para execução futura. Nenhuma das mudanças descritas aqui foi implementada nesta etapa. O pedido atual é somente documentar; não publicar nem alterar serviços por causa deste arquivo.
 
 ## Contexto e objetivo

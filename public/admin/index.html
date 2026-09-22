@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>Admin Dashboard — Claudia's Community</title>
+<style>
+:root{
+  --bg-deep:#1a1226; --bg-alt:#211732; --panel:#2f2144; --border:rgba(251,244,255,.12);
+  --cream:#fbf4ff; --muted:rgba(251,244,255,.65);
+  --teal:#2de6c6; --magenta:#ff3e9a; --yellow:#ffd23f; --violet:#9b6bff;
+  --font-display:"Baloo 2", ui-rounded, system-ui, sans-serif;
+  --font-body:"Plus Jakarta Sans", system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg-deep);color:var(--cream);font-family:var(--font-body)}
+header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);background:var(--bg-alt);position:sticky;top:0;z-index:5}
+header h1{font-family:var(--font-display);font-size:1.15rem;margin:0}
+header button{padding:9px 18px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--cream);font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem;transition:border-color .2s ease,color .2s ease}
+header button:hover{border-color:var(--magenta);color:var(--magenta)}
+main{max-width:900px;margin:0 auto;padding:28px 20px 60px}
+#gate{display:flex;align-items:center;justify-content:center;min-height:60vh;color:var(--muted)}
+
+.quick-links{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px 20px;margin-bottom:24px}
+.quick-links h2{font-family:var(--font-display);font-size:1rem;margin:0 0 4px}
+.quick-links p{margin:0 0 14px;color:var(--muted);font-size:.82rem}
+.qlinks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.qlink{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--bg-deep);color:var(--cream);text-decoration:none;font-size:.85rem;font-weight:700;transition:border-color .18s ease,transform .15s ease}
+.qlink:hover{border-color:var(--teal);transform:translateY(-1px)}
+.qlink .dot{width:8px;height:8px;border-radius:50%;flex:none}
+.qlink.muted{opacity:.55;pointer-events:none}
+.qlink-edit-note{margin-top:10px;font-size:.72rem;color:var(--muted)}
+.qlink-edit-note code{background:rgba(0,0,0,.25);padding:1px 5px;border-radius:5px}
+
+.tabs{display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border)}
+.tab-btn{padding:10px 18px;border:none;background:transparent;color:var(--muted);font-weight:800;font-size:.9rem;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;transition:color .18s ease,border-color .18s ease}
+.tab-btn.active{color:var(--teal);border-bottom-color:var(--teal)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.count-pill{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:999px;background:var(--violet);color:#1a1226;font-size:.7rem;font-weight:800}
+
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:20px}
+.stat-box{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 14px;text-align:center}
+.stat-box .n{font-family:var(--font-display);font-size:1.5rem;font-weight:800;color:var(--teal)}
+.stat-box .l{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
+.stat-box.status-Declined .n{color:var(--magenta)}
+.stat-box.status-New .n{color:var(--yellow)}
+
+.order{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:14px;opacity:0;transform:translateY(8px);animation:in .35s ease forwards}
+@keyframes in{to{opacity:1;transform:none}}
+.order .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.order .who{font-weight:800}
+.order .who small{display:block;font-weight:500;color:var(--muted);font-size:.75rem;margin-top:2px}
+.status-badge{padding:4px 12px;border-radius:999px;font-size:.72rem;font-weight:800;white-space:nowrap}
+.status-New{background:rgba(255,210,63,.18);color:var(--yellow)}
+.status-Contacted{background:rgba(155,107,255,.2);color:var(--violet)}
+.status-InProgress{background:rgba(45,230,198,.18);color:var(--teal)}
+.status-Done{background:rgba(255,255,255,.1);color:var(--muted)}
+.status-Declined{background:rgba(255,62,154,.18);color:var(--magenta)}
+.order .meta{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0;font-size:.78rem;color:var(--muted)}
+.order .meta b{color:var(--cream)}
+.order .desc{margin:8px 0;font-size:.88rem;white-space:pre-wrap;color:var(--cream)}
+.order .ref a{color:var(--teal);word-break:break-all}
+.order .bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;flex-wrap:wrap}
+.order .time{font-size:.72rem;color:var(--muted)}
+.status-select{padding:7px 10px;border-radius:10px;border:1px solid var(--border);background:var(--bg-deep);color:var(--cream);font-family:inherit;font-size:.8rem}
+.order.removing{animation:out .28s ease forwards}
+@keyframes out{to{opacity:0;transform:scale(.94)}}
+
+.review{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:14px;opacity:0;transform:translateY(8px);animation:in .35s ease forwards}
+.review.removing{animation:out .28s ease forwards}
+.review .top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.review .name{font-weight:800}
+.review .stars{color:var(--yellow);letter-spacing:2px}
+.review .text{margin:8px 0 10px;color:var(--cream);font-size:.92rem;white-space:pre-wrap}
+.review .bottom{display:flex;align-items:center;justify-content:space-between}
+.review .time{font-size:.75rem;color:var(--muted)}
+.review .del{padding:7px 14px;border-radius:999px;border:1px solid var(--magenta);background:transparent;color:var(--magenta);font-weight:700;font-size:.78rem;cursor:pointer;font-family:inherit;transition:background .18s ease,color .18s ease}
+.review .del:hover{background:var(--magenta);color:#1a1226}
+.review .del:disabled{opacity:.5;cursor:default}
+
+#empty,#loading,#err,#ordersEmpty,#ordersLoading,#ordersErr{text-align:center;color:var(--muted);padding:40px 0}
+#err,#ordersErr{color:var(--magenta)}
+</style>
+</head>
+<body>
+<div id="gate">Checking session…</div>
+<div id="app" style="display:none">
+  <header>
+    <h1>Claudia's Community — Admin</h1>
+    <button id="logoutBtn">Log out</button>
+  </header>
+  <main>
+
+    <div class="quick-links">
+      <h2>Quick links</h2>
+      <p>The orders sheet, one tap away. (More links can go here later — just ask.)</p>
+      <div class="qlinks-grid" id="qlinksGrid"></div>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab-btn active" data-tab="orders">Orders<span class="count-pill" id="ordersCountPill" style="display:none"></span></button>
+      <button type="button" class="tab-btn" data-tab="feedback">Feedback<span class="count-pill" id="fbCountPill" style="display:none"></span></button>
+    </div>
+
+    <div class="tab-panel active" id="panel-orders">
+      <div class="stats-row" id="ordersStats" style="display:none"></div>
+      <div id="ordersLoading">Loading orders…</div>
+      <div id="ordersErr" style="display:none"></div>
+      <div id="ordersEmpty" style="display:none">No commission requests yet.</div>
+      <div id="ordersList"></div>
+    </div>
+
+    <div class="tab-panel" id="panel-feedback">
+      <div id="loading">Loading reviews…</div>
+      <div id="err" style="display:none"></div>
+      <div id="empty" style="display:none">No written reviews yet.</div>
+      <div id="list"></div>
+    </div>
+
+  </main>
+</div>
+<script>
+(function () {
+  /* Reads go through the cached proxy (fast, usually served from Netlify's
+     edge) instead of hitting Apps Script directly on every dashboard load
+     -- see netlify/functions/reviews.js. */
+  var REVIEWS_ENDPOINT = '/.netlify/functions/reviews';
+
+  function fetchWithTimeout(url, opts, ms) {
+    opts = opts || {};
+    var controller = new AbortController();
+    var timer = setTimeout(function () { controller.abort(); }, ms || 12000);
+    opts.signal = controller.signal;
+    return fetch(url, opts).finally(function () { clearTimeout(timer); });
+  }
+
+  /* Fill these in with real links — anything left as '' shows greyed-out
+     and unclickable in the Quick Links box above. */
+  var QUICK_LINKS = [
+    { label: '📊 Open Google Sheet', url: 'https://docs.google.com/spreadsheets/d/1k2FS04fQZrXbXrM1UFIUEDyyBqlkuK11B1LC1-Dt32E/edit?usp=sharing', color: '#2de6c6' }
+  ];
+
+  var STATUS_STAGES = ['New', 'Contacted', 'In Progress', 'Done', 'Declined'];
+
+  fetchWithTimeout('/.netlify/functions/admin-check', { credentials: 'include' }, 10000)
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      if (!d.ok) { window.location.href = '/admin/login.html'; return; }
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      renderQuickLinks();
+      loadOrders();
+      loadReviews();
+    })
+    .catch(function () { window.location.href = '/admin/login.html'; });
+
+  document.getElementById('logoutBtn').addEventListener('click', function () {
+    fetchWithTimeout('/.netlify/functions/admin-logout', { method: 'POST', credentials: 'include' }, 8000)
+      .finally(function () { window.location.href = '/admin/login.html'; });
+  });
+
+  Array.prototype.slice.call(document.querySelectorAll('.tab-btn')).forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      Array.prototype.slice.call(document.querySelectorAll('.tab-btn')).forEach(function (b) { b.classList.remove('active'); });
+      Array.prototype.slice.call(document.querySelectorAll('.tab-panel')).forEach(function (p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('panel-' + btn.getAttribute('data-tab')).classList.add('active');
+    });
+  });
+
+  function esc(s) {
+    return String(s || '').replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function renderQuickLinks() {
+    var grid = document.getElementById('qlinksGrid');
+    QUICK_LINKS.forEach(function (l) {
+      var a = document.createElement(l.url ? 'a' : 'span');
+      a.className = 'qlink' + (l.url ? '' : ' muted');
+      if (l.url) { a.href = l.url; a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+      a.title = l.note || '';
+      a.innerHTML = '<span class="dot" style="background:' + (l.color || '#2de6c6') + '"></span>' + esc(l.label);
+      grid.appendChild(a);
+    });
+  }
+
+  function statusClass(s) { return 'status-' + String(s || 'New').replace(/\s+/g, ''); }
+
+  function renderStats(orders) {
+    var box = document.getElementById('ordersStats');
+    if (!orders.length) { box.style.display = 'none'; return; }
+    var counts = { Total: orders.length };
+    STATUS_STAGES.forEach(function (s) { counts[s] = 0; });
+    orders.forEach(function (o) { var s = o.status || 'New'; counts[s] = (counts[s] || 0) + 1; });
+    var weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    var thisWeek = orders.filter(function (o) { return o.timestamp && new Date(o.timestamp).getTime() >= weekAgo; }).length;
+
+    var boxes = [
+      { label: 'Total orders', n: counts.Total, cls: '' },
+      { label: 'This week', n: thisWeek, cls: '' }
+    ];
+    STATUS_STAGES.forEach(function (s) { boxes.push({ label: s, n: counts[s] || 0, cls: 'status-' + s.replace(/\s+/g, '') }); });
+
+    box.innerHTML = boxes.map(function (b) {
+      return '<div class="stat-box ' + b.cls + '"><div class="n">' + b.n + '</div><div class="l">' + esc(b.label) + '</div></div>';
+    }).join('');
+    box.style.display = 'grid';
+  }
+
+  var allOrders = [];
+
+  function loadOrders() {
+    fetch('/.netlify/functions/admin-orders', { credentials: 'include' })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+      .then(function (r) {
+        document.getElementById('ordersLoading').style.display = 'none';
+        if (!r.ok) throw new Error(r.data.error || 'Could not load orders.');
+        var orders = r.data.orders || [];
+        allOrders = orders;
+        renderStats(orders);
+        var pill = document.getElementById('ordersCountPill');
+        if (orders.length) { pill.style.display = 'inline-block'; pill.textContent = orders.length; }
+        if (!orders.length) { document.getElementById('ordersEmpty').style.display = 'block'; return; }
+        var list = document.getElementById('ordersList');
+        orders.forEach(function (o) { list.appendChild(renderOrder(o)); });
+      })
+      .catch(function (err) {
+        document.getElementById('ordersLoading').style.display = 'none';
+        var e = document.getElementById('ordersErr');
+        e.style.display = 'block';
+        e.textContent = err.message || 'Could not reach the order server.';
+      });
+  }
+
+  function renderOrder(o) {
+    var el = document.createElement('div');
+    el.className = 'order';
+    var when = o.timestamp ? new Date(o.timestamp).toLocaleString() : '';
+    var refHtml = o.reference ? ('<div class="ref"><b>Reference:</b> ' + esc(o.reference) + '</div>') : '';
+    var optionsHtml = STATUS_STAGES.map(function (s) {
+      return '<option value="' + esc(s) + '"' + (s === (o.status || 'New') ? ' selected' : '') + '>' + esc(s) + '</option>';
+    }).join('');
+
+    el.innerHTML =
+      '<div class="top">' +
+        '<div class="who">' + esc(o.name || 'Unnamed') + '<small>' + esc(o.email || '') + '</small></div>' +
+        '<span class="status-badge ' + statusClass(o.status) + '" data-badge>' + esc(o.status || 'New') + '</span>' +
+      '</div>' +
+      '<div class="meta">' +
+        '<span><b>Type:</b> ' + esc(o.type || '\u2014') + '</span>' +
+        (o.budget ? '<span><b>Budget:</b> ' + esc(o.budget) + '</span>' : '') +
+        '<span><b>Request ID:</b> ' + esc(o.id || '') + '</span>' +
+      '</div>' +
+      (o.description ? '<div class="desc">' + esc(o.description) + '</div>' : '') +
+      refHtml +
+      '<div class="bottom">' +
+        '<span class="time">Sent ' + esc(when) + '</span>' +
+        '<select class="status-select" data-id="' + esc(o.id) + '">' + optionsHtml + '</select>' +
+      '</div>';
+
+    var sel = el.querySelector('.status-select');
+    sel.addEventListener('change', function () { updateOrderStatus(o, sel, el); });
+    return el;
+  }
+
+  function updateOrderStatus(o, sel, el) {
+    var newStatus = sel.value;
+    var prevStatus = o.status || 'New';
+    sel.disabled = true;
+    fetch('/.netlify/functions/admin-update-order', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: o.id, status: newStatus })
+    })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+      .then(function (r) {
+        sel.disabled = false;
+        if (!r.ok) throw new Error(r.data.error || 'Update failed');
+        o.status = newStatus;
+        var badge = el.querySelector('[data-badge]');
+        badge.className = 'status-badge ' + statusClass(newStatus);
+        badge.textContent = newStatus;
+        renderStats(allOrders);
+      })
+      .catch(function (err) {
+        sel.disabled = false;
+        sel.value = prevStatus;
+        window.alert(err.message || 'Could not update status — try again.');
+      });
+  }
+
+  function loadReviews() {
+    fetch(REVIEWS_ENDPOINT, { cache: 'no-store' })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        document.getElementById('loading').style.display = 'none';
+        var reviews = (data && data.reviews) || [];
+        var pill = document.getElementById('fbCountPill');
+        if (reviews.length) { pill.style.display = 'inline-block'; pill.textContent = reviews.length; }
+        if (!reviews.length) { document.getElementById('empty').style.display = 'block'; return; }
+        var list = document.getElementById('list');
+        reviews.forEach(function (rev) { list.appendChild(renderReview(rev)); });
+      })
+      .catch(function () {
+        document.getElementById('loading').style.display = 'none';
+        var err = document.getElementById('err');
+        err.style.display = 'block';
+        err.textContent = 'Could not reach the review server — check the Apps Script deployment.';
+      });
+  }
+
+  function renderReview(rev) {
+    var el = document.createElement('div');
+    el.className = 'review';
+    var stars = '★★★★★'.slice(0, Number(rev.rating) || 0) + '☆☆☆☆☆'.slice(0, 5 - (Number(rev.rating) || 0));
+    var when = rev.timestamp ? new Date(rev.timestamp).toLocaleString() : '';
+    el.innerHTML =
+      '<div class="top"><span class="name">' + esc(rev.name || 'Anonymous') + '</span><span class="stars">' + stars + '</span></div>' +
+      (rev.text ? '<div class="text">' + esc(rev.text) + '</div>' : '') +
+      '<div class="bottom"><span class="time">' + esc(when) + '</span>' +
+      (rev.id ? '<button class="del" data-id="' + esc(rev.id) + '">Delete</button>' : '<span></span>') +
+      '</div>';
+    var delBtn = el.querySelector('.del');
+    if (delBtn) {
+      delBtn.addEventListener('click', function () { deleteReview(rev.id, el, delBtn); });
+    }
+    return el;
+  }
+
+  function deleteReview(id, el, btn) {
+    if (!window.confirm('Delete this review? This can\'t be undone.')) return;
+    btn.disabled = true;
+    btn.textContent = 'Deleting…';
+    fetch('/.netlify/functions/admin-delete-review', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: id })
+    })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+      .then(function (r) {
+        if (!r.ok) throw new Error(r.data.error || 'Delete failed');
+        el.classList.add('removing');
+        setTimeout(function () {
+          el.remove();
+          if (!document.getElementById('list').children.length) {
+            document.getElementById('empty').style.display = 'block';
+          }
+        }, 260);
+      })
+      .catch(function (err) {
+        btn.disabled = false;
+        btn.textContent = 'Delete';
+        window.alert(err.message || 'Could not delete — try again.');
+      });
+  }
+})();
+</script>
+</body>
+</html>

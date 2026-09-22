@@ -4,6 +4,8 @@
 !.env.example
 *.pem
 *.key
+*-private/
+CREDENCIAIS*.md
 
 # Dependencies and generated files
 node_modules/

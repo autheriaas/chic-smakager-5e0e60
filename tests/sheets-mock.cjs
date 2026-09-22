@@ -35,6 +35,7 @@ function backend(seed = {}) {
     getMaxRows() { return Math.max(1000, this.data.length); }
     getRange(...args) { return new Range(this, ...args); }
     appendRow(values) { this.data.push([...values]); }
+    insertRowBefore(row) { this.data.splice(row - 1, 0, []); }
     deleteRow(row) { this.data.splice(row - 1, 1); }
     setFrozenRows() {}
     hideSheet() {}

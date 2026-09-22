@@ -117,6 +117,12 @@ function rows_(t) {
   });
 }
 function append_(t, record) { t.sheet.appendRow(t.headers.map(function (h) { return record[h] == null ? '' : record[h]; })); record._row = t.sheet.getLastRow(); return record; }
+function prepend_(t, record) {
+  t.sheet.insertRowBefore(2);
+  t.sheet.getRange(2, 1, 1, t.headers.length).setValues([t.headers.map(function (h) { return record[h] == null ? '' : record[h]; })]);
+  record._row = 2;
+  return record;
+}
 function update_(t, row, fields) { Object.keys(fields).forEach(function (key) { t.sheet.getRange(row._row, t.headers.indexOf(key) + 1).setValue(fields[key]); row[key] = fields[key]; }); }
 function rate_(ss, key, max) {
   var t = table_(ss, '_RateLimits', RATE_HEADERS), now = Date.now(), window = Math.floor(now / 3600000);
@@ -138,7 +144,7 @@ function createOrder_(ss, data) {
   if (!row) {
     if (!rate_(ss, 'create-email:' + sha_(o.email), 5)) error_(429);
     var now = new Date();
-    row = append_(t, { Timestamp: now, Id: Utilities.getUuid(), Status: 'Received', Name: safe_(o.name), Email: safe_(o.email), Type: o.type, Budget: safe_(o.budget), Description: safe_(o.description), Reference: safe_(o.reference), LastUpdated: now, Number: nextNumber_(all), ClientMessage: '', AccessHash: sha_(data.accessToken), RequestId: data.requestId, Fingerprint: data.fingerprint, MailState: 'Pending', AccessEnabled: true });
+    row = prepend_(t, { Timestamp: now, Id: Utilities.getUuid(), Status: 'Received', Name: safe_(o.name), Email: safe_(o.email), Type: o.type, Budget: safe_(o.budget), Description: safe_(o.description), Reference: safe_(o.reference), LastUpdated: now, Number: nextNumber_(all), ClientMessage: '', AccessHash: sha_(data.accessToken), RequestId: data.requestId, Fingerprint: data.fingerprint, MailState: 'Pending', AccessEnabled: true });
     SpreadsheetApp.flush(); // Persist before attempting delivery.
   }
   // A replay of the original submission must never restore a rotated/revoked token.

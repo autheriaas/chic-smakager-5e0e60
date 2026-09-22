@@ -35,6 +35,11 @@ test('create is idempotent, refuses changed request and escapes spreadsheet form
   assert.equal(b.post('createOrder',{...data,fingerprint:b.hash('different')}).code,409);
   assert(!JSON.stringify(b.records('Orders')).includes(data.accessToken));
 });
+test('new orders are inserted directly below the header', () => {
+  const b=ready(), first=create(b), second=create(b);
+  assert.deepEqual(b.records('Orders').map(row=>row.Number),[second.result.number,first.result.number]);
+  assert.equal(first.result.number,'ART-00001'); assert.equal(second.result.number,'ART-00002');
+});
 test('mail failure preserves order and retry sends once without duplicating', () => {
   const b=ready(); b.setMailFails(true); const {data,result}=create(b);
   assert.equal(result.status,'ok'); assert.equal(result.emailSent,false);
@@ -77,15 +82,15 @@ test('recovery rotates one order, expires, works once, and creation retry cannot
   const tokens=recover(b); assert.equal(tokens.length,2);
   assert.equal(b.post('trackOrder',{tokenHash:b.hash(first.data.accessToken)}).status,'ok');
   const accessHash=b.hash('new-secret');
-  assert.equal(b.post('confirmRecovery',{tokenHash:b.hash(tokens[0]),accessHash}).status,'ok');
-  assert.equal(b.post('confirmRecovery',{tokenHash:b.hash(tokens[0]),accessHash}).code,404);
+  assert.equal(b.post('confirmRecovery',{tokenHash:b.hash(tokens[1]),accessHash}).status,'ok');
+  assert.equal(b.post('confirmRecovery',{tokenHash:b.hash(tokens[1]),accessHash}).code,404);
   assert.equal(b.post('trackOrder',{tokenHash:b.hash(first.data.accessToken)}).code,404);
   assert.equal(b.post('trackOrder',{tokenHash:accessHash}).status,'ok');
   assert.equal(b.post('trackOrder',{tokenHash:b.hash(second.data.accessToken)}).status,'ok');
   b.post('createOrder',first.data); assert.equal(b.post('trackOrder',{tokenHash:b.hash(first.data.accessToken)}).code,404);
-  b.set('Orders',1,'RecoveryExpires',Date.now()-1);
-  assert.equal(b.post('confirmRecovery',{tokenHash:b.hash(tokens[1]),accessHash:b.hash('other')}).code,404);
-  assert(!JSON.stringify(b.records('Orders')).includes(tokens[1]));
+  b.set('Orders',0,'RecoveryExpires',Date.now()-1);
+  assert.equal(b.post('confirmRecovery',{tokenHash:b.hash(tokens[0]),accessHash:b.hash('other')}).code,404);
+  assert(!JSON.stringify(b.records('Orders')).includes(tokens[0]));
 });
 test('recovery retries after exhausted quota and never restores a consumed token on retry', () => {
   const b=ready(); create(b); b.setQuota(0);

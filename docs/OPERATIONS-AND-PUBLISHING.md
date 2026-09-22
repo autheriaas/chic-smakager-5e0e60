@@ -47,6 +47,7 @@ Legacy orders do not receive bulk email. If they have a valid email, they can be
 
 ### Orders
 
+- New orders are inserted directly below the header, so the newest submission remains at the top without manual sorting. Existing rows keep their relative order.
 - `Status`: current stage.
 - `ClientMessage`: a message **public to the client for that order**. Do not put internal notes here.
 - `LastUpdated`: updated automatically when Status, Type, or ClientMessage changes, including multi-row pastes.

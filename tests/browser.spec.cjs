@@ -64,6 +64,7 @@ test('submit, retry after lost response, then view and refresh only public order
   await expect(page.locator('.nav-links a')).toHaveCount(4);
   await expect(page.locator('footer a[href="/terms.html"]')).toHaveCount(1);
   await expect(page.locator('#order-number')).toHaveText('ART-00001');
+  await expect(page.locator('#tracking-status')).toHaveCount(0);
   expect(page.url()).not.toContain(token);
   state.b.set('Orders', 0, 'Status', 'In progress');
   state.b.set('Orders', 0, 'ClientMessage', 'Your sketch is ready! <img src=x onerror=alert(1)>');

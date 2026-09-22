@@ -176,7 +176,7 @@ button{font-family:inherit}
 /* header */
 .site-header{position:sticky;top:0;z-index:60;background:rgba(26,18,38,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
 .nav-wrap{max-width:1120px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.logo{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:800;font-size:1rem;white-space:nowrap}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:800;font-size:1.5rem;white-space:nowrap}
 .logo img{width:30px;height:30px;border-radius:9px;object-fit:cover}
 .nav-right{display:flex;align-items:center;gap:14px}
 .nav-links{display:none;gap:26px;font-weight:600;font-size:.92rem}
@@ -193,7 +193,7 @@ button{font-family:inherit}
   .nav-toggle{display:none}
   .mobile-menu{display:none!important}
 }
-@media (max-width:420px){.logo{font-size:.8rem}.logo img{width:26px;height:26px}}
+@media (max-width:420px){.logo img{width:26px;height:26px}}
 
 /* hero */
 .hero{padding:56px 0 40px}
@@ -394,9 +394,9 @@ button{font-family:inherit}
 .form-footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-top:20px}
 .form-status{width:100%;font-size:.82rem;font-weight:700;color:var(--teal);margin-top:8px}
 
-footer{border-top:1px solid var(--border);padding:28px 0}
+footer{border-top:1px solid var(--border);padding:28px 0;background:rgba(33,23,50,.55)}
 .footer-wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;font-size:.88rem;color:var(--muted)}
-.footer-links{display:flex;gap:18px}
+.footer-links{display:flex;flex-wrap:wrap;gap:12px 18px}
 .footer-links a:hover{color:var(--teal)}
 
 /* lightbox */
@@ -522,6 +522,7 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
    trigger a jarring zoom-in on iPhone. 16px on touch devices only, so
    desktop sizing is untouched. */
 @media (max-width:640px){
+  .site-header .btn-sm{display:none}
   .fb-inner input,.fb-inner textarea,.field input,.field select,.field textarea{font-size:16px}
 }
 </style>

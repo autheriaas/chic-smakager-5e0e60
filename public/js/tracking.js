@@ -5,6 +5,20 @@
   var recovery;
   var pattern = /^[A-Za-z0-9_-]{43}$/;
   var api = window.AutheriaRequests;
+  var navToggle = document.querySelector('.nav-toggle');
+  var mobileMenu = document.querySelector('.mobile-menu');
+  if (navToggle && mobileMenu) {
+    navToggle.addEventListener('click', function () {
+      var open = mobileMenu.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    mobileMenu.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        mobileMenu.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
   async function load() {
     var loadingToken = token;
     $('refresh-order').disabled = true;

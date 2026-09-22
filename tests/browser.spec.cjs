@@ -59,6 +59,10 @@ test('submit, retry after lost response, then view and refresh only public order
   expect(creates[0].requestId).toBe(creates[1].requestId);
   const token = state.b.mail[0].body.match(/#token=([\w-]+)/)[1];
   await page.goto('/track.html#token=' + token);
+  await expect(page.locator('link[rel="icon"][href="/assets/meta/favicon.ico"]')).toHaveCount(1);
+  await expect(page.locator('.site-header .logo')).toHaveAttribute('href', '/');
+  await expect(page.locator('.nav-links a')).toHaveCount(4);
+  await expect(page.locator('footer a[href="/terms.html"]')).toHaveCount(1);
   await expect(page.locator('#order-number')).toHaveText('ART-00001');
   expect(page.url()).not.toContain(token);
   state.b.set('Orders', 0, 'Status', 'In progress');
@@ -71,6 +75,10 @@ test('submit, retry after lost response, then view and refresh only public order
   expect(errors).toEqual([]);
   await page.screenshot({ path: 'reports/tracking-desktop.png', fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.getByRole('button', { name: 'Open menu' }).click();
+  await expect(page.locator('#mobile-menu')).toHaveClass(/open/);
+  await page.getByRole('button', { name: 'Open menu' }).click();
+  await expect(page.locator('#mobile-menu')).not.toHaveClass(/open/);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.screenshot({ path: 'reports/tracking-mobile.png', fullPage: true });
 });

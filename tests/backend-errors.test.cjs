@@ -16,10 +16,12 @@ test('upstream failures distinguish timeout, transport, invalid response and aut
   try {
     await check(async () => { throw new DOMException('private-test-token', 'TimeoutError'); }, 504, 'UPSTREAM_TIMEOUT');
     await check(async () => { throw new TypeError('private@example.test'); }, 502, 'UPSTREAM_NETWORK_ERROR');
+    await check(async () => ({ ok: false, status: 429 }), 502, 'UPSTREAM_HTTP_ERROR');
     await check(async () => ({ ok: true, json: async () => { throw new SyntaxError('private-test-token'); } }), 502, 'UPSTREAM_NON_JSON');
     await check(async () => ({ ok: true, json: async () => ({ status: 'error', code: 403 }) }), 502, 'UPSTREAM_AUTH_REJECTED');
     await check(async () => ({ ok: true, json: async () => ({ status: 'error', code: 503, reason: 'BACKEND_BUSY' }) }), 503, 'BACKEND_BUSY');
     const output = logs.join('\n');
+    assert.match(output, /"upstreamStatus":429/);
     for (const value of ['private@example.test', 'private-test-token', process.env.BACKEND_SECRET, process.env.APPS_SCRIPT_URL]) assert(!output.includes(value));
   } finally { process.env = originalEnv; global.fetch = originalFetch; console.warn = originalWarn; }
 });

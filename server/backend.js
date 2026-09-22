@@ -53,9 +53,9 @@ async function upstream(action, data, event) {
   // Netlify supplies this header; X-Forwarded-For is not trusted.
   const clientKey = hash(hmac(c.secret, 'ip:' + (event.headers?.['x-nf-client-connection-ip'] || 'local')));
   const started = Date.now();
-  function upstreamError(status, code, message) {
+  function upstreamError(status, code, message, diagnostics = {}) {
     // Safe diagnostics only: never include URLs, request bodies, tokens or email.
-    console.warn('[backend]', JSON.stringify({ action, code, elapsedMs: Date.now() - started }));
+    console.warn('[backend]', JSON.stringify({ action, code, elapsedMs: Date.now() - started, ...diagnostics }));
     return new HttpError(status, message, code);
   }
   let res, result;
@@ -65,7 +65,7 @@ async function upstream(action, data, event) {
       body: JSON.stringify({ ...data, action, secret: c.secret, clientKey }),
       signal: AbortSignal.timeout(50000), redirect: 'follow',
     });
-    if (!res.ok) throw upstreamError(502, 'UPSTREAM_HTTP_ERROR', 'The service could not confirm the request. Please try again later.');
+    if (!res.ok) throw upstreamError(502, 'UPSTREAM_HTTP_ERROR', 'The service could not confirm the request. Please try again later.', { upstreamStatus: res.status });
     try { result = await res.json(); }
     catch (error) {
       if (error.name === 'TimeoutError' || error.name === 'AbortError') throw error;

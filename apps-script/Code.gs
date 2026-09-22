@@ -1,15 +1,16 @@
 ﻿/**
- * Claudia's Community backend v2. See docs/OPERACAO-E-PUBLICACAO.md.
+ * Claudia's Community backend v2. See docs/OPERATIONS-AND-PUBLISHING.md.
  * Required Script Properties: BACKEND_SECRET, SITE_URL.
  * Run setup() manually once after backing up the spreadsheet.
  * All HTTP operations require the server secret; no legacy client editing.
  */
 var ORDER_HEADERS = ['Timestamp', 'Id', 'Status', 'Name', 'Email', 'Type', 'Budget', 'Description', 'Reference', 'LastUpdated', 'Number', 'ClientMessage', 'AccessHash', 'RecoveryHash', 'RecoveryExpires', 'RequestId', 'Fingerprint', 'MailState', 'AccessEnabled'];
 var REVIEW_HEADERS = ['Timestamp', 'Name', 'Rating', 'Text', 'Id', 'Visible', 'RequestId', 'Fingerprint'];
-var QUEUE_HEADERS = ['Timestamp', 'RequestId', 'Email', 'State', 'Attempts', 'Prepared'];
+var QUEUE_HEADERS = ['Timestamp', 'RequestId', 'Email', 'State', 'Attempts', 'Prepared', 'LeaseUntil'];
 var RATE_HEADERS = ['Key', 'Window', 'Count'];
 var STATUSES = ['Received', 'Contacted', 'In progress', 'Completed'];
 var TYPES = ['PFP / Banner', '3D Model', 'Streaming Assets / Emotes', 'Character Art', 'Animation', 'Couple Art'];
+var RECOVERY_PENDING_PROPERTY = 'RECOVERY_QUEUE_PENDING';
 
 function props_() { return PropertiesService.getScriptProperties(); }
 function spreadsheet_() {
@@ -177,6 +178,7 @@ function queueRecovery_(ss, data) {
   // No lookup of Orders here. Known/unknown email addresses follow the same path.
   if (rate_(ss, 'recover-email:' + sha_(data.email), 3)) {
     append_(queue, { Timestamp: new Date(), RequestId: data.requestId, Email: safe_(data.email), State: 'Pending', Attempts: 0 });
+    props_().setProperty(RECOVERY_PENDING_PROPERTY, '1');
   }
   return { status: 'ok' };
 }
@@ -196,41 +198,82 @@ function sendMail_(to, subject, body) {
   if (MailApp.getRemainingDailyQuota() < 1) error_(503);
   MailApp.sendEmail({ to: to, subject: subject, body: body, name: "Claudia's Community" });
 }
-/** Time-driven trigger: consumes at most five queue rows per minute. */
-function processRecoveryQueue() {
-  if (props_().getProperty('SCHEMA_VERSION') !== '2') return;
-  var pendingWork = rows_(readTable_(spreadsheet_(), '_RecoveryQueue', QUEUE_HEADERS));
-  if (!pendingWork.some(function (r) { return r.State === 'Pending' || Date.now() - new Date(r.Timestamp).getTime() > 86400000; })) return;
-  locked_(function () {
+function setRecoveryPending_(pending) {
+  if (pending) props_().setProperty(RECOVERY_PENDING_PROPERTY, '1');
+  else props_().deleteProperty(RECOVERY_PENDING_PROPERTY);
+}
+function refreshRecoveryPending_(queueRows) {
+  setRecoveryPending_(queueRows.some(function (r) { return r.State === 'Pending' || r.State === 'Processing'; }));
+}
+function claimRecoveryJobs_() {
+  return locked_(function () {
     var ss = spreadsheet_(), queue = table_(ss, '_RecoveryQueue', QUEUE_HEADERS), orders = table_(ss, 'Orders', ORDER_HEADERS);
-    var pending = rows_(queue).filter(function (r) { return r.State === 'Pending'; }).slice(0, 5);
-    pending.forEach(function (item) {
-      var age = Date.now() - new Date(item.Timestamp).getTime();
-      if (age > 30 * 60000) { update_(queue, item, { State: 'Expired' }); return; }
+    var now = Date.now(), queueRows = rows_(queue), orderRows = rows_(orders), jobs = [];
+    queueRows.forEach(function (item) {
+      var age = now - new Date(item.Timestamp).getTime();
+      if (age > 86400000) { item.State = 'Expired'; return; }
+      if (item.State === 'Processing' && Number(item.LeaseUntil) <= now) {
+        var staleAttempts = Number(item.Attempts) + 1;
+        update_(queue, item, { State: staleAttempts >= 3 ? 'Failed' : 'Pending', Attempts: staleAttempts, LeaseUntil: '' });
+      }
+      if (item.State === 'Pending' && age > 30 * 60000) update_(queue, item, { State: 'Expired', LeaseUntil: '' });
+    });
+    queueRows.filter(function (r) { return r.State === 'Pending'; }).slice(0, 2).forEach(function (item) {
       try {
-        var matches = rows_(orders).filter(function (r) { return enabled_(r.AccessEnabled) && String(r.Email).trim().toLowerCase() === String(item.Email).trim().toLowerCase(); });
+        var matches = orderRows.filter(function (r) { return enabled_(r.AccessEnabled) && String(r.Email).trim().toLowerCase() === String(item.Email).trim().toLowerCase(); });
         var links = [];
-        if (matches.length && MailApp.getRemainingDailyQuota() < 1) error_(503);
         matches.forEach(function (row) {
-          // HMAC of a fresh random request ID gives a cryptographically strong token.
-          // Only its hash is persisted; raw tokens exist solely in the outbound email.
+          // HMAC of a stable request/order pair keeps retries idempotent.
+          // Only its hash is persisted; raw tokens live only in this job and the email.
           var token = mac_('recovery:' + item.RequestId + ':' + row.Id), tokenHash = sha_(token);
           if (item.Prepared === true && row.RecoveryHash !== tokenHash) return;
-          var expires = row.RecoveryHash === tokenHash ? Number(row.RecoveryExpires) : Date.now() + 15 * 60000;
-          if (expires <= Date.now()) return;
+          var expires = row.RecoveryHash === tokenHash && Number(row.RecoveryExpires) > now ? Number(row.RecoveryExpires) : now + 15 * 60000;
           update_(orders, row, { RecoveryHash: tokenHash, RecoveryExpires: expires });
           links.push(row.Number + ': ' + site_() + '/track.html#recover=' + token);
         });
-        if (links.length) {
-          update_(queue, item, { Prepared: true });
-          SpreadsheetApp.flush();
-          sendMail_(String(item.Email), 'Recover your commission tracking links', 'Open the link for the order you want to follow and confirm recovery. Links expire in 15 minutes and work once. Confirming replaces the previous tracking link for that order.\n\n' + links.join('\n\n') + '\n\nIf you did not request this, ignore this email. Your existing tracking links remain valid until recovery is confirmed.');
+        if (!links.length) {
+          update_(queue, item, { State: 'Processed', Attempts: Number(item.Attempts) + 1, LeaseUntil: '' });
+          return;
         }
-        update_(queue, item, { State: 'Processed', Attempts: Number(item.Attempts) + 1 });
-      } catch (_) { update_(queue, item, { Attempts: Number(item.Attempts) + 1, State: Number(item.Attempts) >= 2 ? 'Failed' : 'Pending' }); }
+        update_(queue, item, { State: 'Processing', Prepared: true, LeaseUntil: now + 5 * 60000 });
+        jobs.push({
+          requestId: String(item.RequestId),
+          to: String(item.Email),
+          subject: 'Recover your commission tracking links',
+          body: 'Open the link for the order you want to follow and confirm recovery. Links expire in 15 minutes and work once. Confirming replaces the previous tracking link for that order.\n\n' + links.join('\n\n') + '\n\nIf you did not request this, ignore this email. Your existing tracking links remain valid until recovery is confirmed.'
+        });
+      } catch (_) {
+        var attempts = Number(item.Attempts) + 1;
+        update_(queue, item, { Attempts: attempts, State: attempts >= 3 ? 'Failed' : 'Pending', LeaseUntil: '' });
+      }
     });
     // Queue contains email addresses: remove completed/abandoned work after 24h.
-    rows_(queue).slice().reverse().forEach(function (r) { if (Date.now() - new Date(r.Timestamp).getTime() > 86400000) queue.sheet.deleteRow(r._row); });
+    queueRows.slice().reverse().forEach(function (r) { if (now - new Date(r.Timestamp).getTime() > 86400000) queue.sheet.deleteRow(r._row); });
+    refreshRecoveryPending_(queueRows);
+    return jobs;
+  });
+}
+function finishRecoveryJob_(job, sent) {
+  locked_(function () {
+    var queue = table_(spreadsheet_(), '_RecoveryQueue', QUEUE_HEADERS), queueRows = rows_(queue);
+    var item = queueRows.filter(function (r) { return r.RequestId === job.requestId && r.State === 'Processing'; })[0];
+    if (item) {
+      var attempts = Number(item.Attempts) + 1;
+      update_(queue, item, { State: sent ? 'Processed' : attempts >= 3 ? 'Failed' : 'Pending', Attempts: attempts, LeaseUntil: '' });
+    }
+    refreshRecoveryPending_(queueRows);
+  });
+}
+/** Time-driven trigger: claims at most two requests, then sends mail without holding ScriptLock. */
+function processRecoveryQueue() {
+  if (props_().getProperty('SCHEMA_VERSION') !== '2' || props_().getProperty(RECOVERY_PENDING_PROPERTY) !== '1') return;
+  var jobs = claimRecoveryJobs_();
+  jobs.forEach(function (job) {
+    var sent = false;
+    try { sendMail_(job.to, job.subject, job.body); sent = true; } catch (_) {}
+    try { finishRecoveryJob_(job, sent); } catch (_) {
+      // The lease and pending flag allow a later run to recover if finalization is interrupted.
+    }
   });
 }
 function createReview_(ss, data) {
@@ -290,6 +333,7 @@ function setup() {
       if (!p.length) t.sheet.protect().setDescription('Autheria internal').setWarningOnly(true);
       t.sheet.hideSheet();
     });
+    refreshRecoveryPending_(rows_(table_(ss, '_RecoveryQueue', QUEUE_HEADERS)));
     orders.sheet.setFrozenRows(1); reviews.sheet.setFrozenRows(1);
     props_().setProperty('SCHEMA_VERSION', '2');
   });

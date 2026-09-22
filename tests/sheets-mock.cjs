@@ -7,7 +7,7 @@ function backend(seed = {}) {
     ['BACKEND_SECRET', 'test-only-backend-secret-with-more-than-32-chars'],
     ['SITE_URL', 'https://example.test'],
   ]);
-  const mail = [], triggers = [], reads = [];
+  const mail = [], mailLockStates = [], triggers = [], reads = [];
   let locked = false, quota = 100, mailFails = false;
   class Range {
     constructor(sheet, row, column, height = 1, width = 1) { Object.assign(this, { sheet, row, column, height, width }); }
@@ -54,17 +54,17 @@ function backend(seed = {}) {
   const chain = new Proxy({}, { get(_, key) { if (key === 'build') return () => ({}); return () => chain; } });
   const context = vm.createContext({
     Date, console, SpreadsheetApp: { getActiveSpreadsheet: () => spreadsheet, openById: id => { if (id !== 'test-spreadsheet-id') throw Error('Wrong sheet'); return spreadsheet; }, flush() {}, newDataValidation: () => chain, ProtectionType: { RANGE: 'RANGE', SHEET: 'SHEET' } },
-    PropertiesService: { getScriptProperties: () => ({ getProperty: k => properties.get(k), setProperty: (k, v) => properties.set(k, v) }) },
+    PropertiesService: { getScriptProperties: () => ({ getProperty: k => properties.get(k), setProperty: (k, v) => properties.set(k, v), deleteProperty: k => properties.delete(k) }) },
     LockService: { getScriptLock: () => ({ tryLock() { if (locked) return false; locked = true; return true; }, releaseLock() { locked = false; } }) },
     ContentService: { MimeType: { JSON: 'json' }, createTextOutput: body => ({ body, setMimeType() { return this; } }) },
     Utilities: { DigestAlgorithm: { SHA_256: 'sha256' }, Charset: { UTF_8: 'utf8' }, computeDigest: (_, s) => [...crypto.createHash('sha256').update(s).digest()], computeHmacSha256Signature: (s, k) => [...crypto.createHmac('sha256', k).update(s).digest()], base64EncodeWebSafe: b => Buffer.from(b).toString('base64url'), getUuid: () => crypto.randomUUID() },
-    MailApp: { getRemainingDailyQuota: () => quota, sendEmail(data) { if (mailFails) throw Error('Mail unavailable'); quota--; mail.push(data); } },
+    MailApp: { getRemainingDailyQuota: () => quota, sendEmail(data) { mailLockStates.push(locked); if (mailFails) throw Error('Mail unavailable'); quota--; mail.push(data); } },
     ScriptApp: { getProjectTriggers: () => triggers.map(name => ({ getHandlerFunction: () => name })), newTrigger(name) { const t = { timeBased: () => t, everyMinutes: () => t, forSpreadsheet: () => t, onEdit: () => t, create: () => triggers.push(name) }; return t; } },
   });
   vm.runInContext(fs.readFileSync('apps-script/Code.gs', 'utf8').replace(/^\uFEFF/, ''), context);
   const hash = value => crypto.createHash('sha256').update(value).digest('hex');
   return {
-    ctx: context, sheets, spreadsheet, properties, mail, reads, hash, triggers,
+    ctx: context, sheets, spreadsheet, properties, mail, mailLockStates, reads, hash, triggers,
     setup: () => context.setup(),
     setQuota: n => { quota = n; }, setMailFails: v => { mailFails = v; }, setLocked: v => { locked = v; },
     records(name) { const s = sheets.get(name); return s.data.slice(1).map(r => Object.fromEntries(s.data[0].map((h, i) => [h, r[i] ?? '']))); },

@@ -65,7 +65,7 @@ The old `Ratings` and `Stats` sheets are preserved as history. The prior impleme
 
 ## Recovery and limits
 
-The request adds a row to `_RecoveryQueue` without looking up orders. Known and unknown addresses receive the same response. The trigger processes up to five requests per run and sends one email with individual links for every enabled order at that address.
+The request adds a row to `_RecoveryQueue` without looking up orders. Known and unknown addresses receive the same response. It also sets the `RECOVERY_QUEUE_PENDING` Script Property. When that flag is absent, the minute trigger returns without opening the spreadsheet. The trigger claims up to two requests per run and sends one email with individual links for every enabled order at that address.
 
 Recovery tokens are cryptographically derived from a random identifier and the backend secret. Only hashes are stored in orders. The queue holds request ID, email, and state, never plaintext tokens. The 15-minute period starts when the worker prepares links. Opening a link does not consume it; the client must confirm. Confirmation uses an Apps Script lock to prevent double use and changes the three technical fields in one range write.
 
@@ -80,7 +80,7 @@ Persistent limits per one-hour window:
 
 The IP identifier is hashed with a Function secret, not stored as plaintext. `_RateLimits` retains current windows only, limited to 5,000 entries. Technical sheets are hidden. Rate limiting is a basic low-volume safeguard and does not replace infrastructure-level protection against large attacks.
 
-Queue email failures are retried up to three times. Pending requests older than 30 minutes expire; queue records are removed after 24 hours. MailApp quotas depend on the account. Check trigger execution history and the `Pending`, `Processed`, `Failed`, and `Expired` states in the technical sheet. Do not enable logs containing tokens, secrets, or order payloads.
+Queue preparation uses a short ScriptLock and marks claimed rows as `Processing` with a five-minute lease. Email is sent only after releasing that lock, so web requests do not wait behind MailApp. An interrupted worker returns leased work to the queue after the lease expires. Email failures are retried up to three times. Pending requests older than 30 minutes expire; queue records are removed after 24 hours. MailApp quotas depend on the account. Check trigger execution history and the `Pending`, `Processing`, `Processed`, `Failed`, and `Expired` states in the technical sheet. Do not enable logs containing tokens, secrets, or order payloads.
 
 ## Coordinated production publishing
 

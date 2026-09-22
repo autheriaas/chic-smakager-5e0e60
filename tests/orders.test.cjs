@@ -57,6 +57,9 @@ test('recovery request does not look up orders and responds identically to unkno
   const unknown=b.post('queueRecovery',{email:'nobody@example.test',requestId:crypto.randomUUID()});
   assert.deepEqual(known,unknown); assert(!b.reads.includes('Orders'));
   const sentBefore=b.mail.length; b.ctx.processRecoveryQueue(); assert.equal(b.mail.length,sentBefore+1);
+  assert.equal(b.mailLockStates.at(-1),false,'Recovery email must be sent after releasing ScriptLock');
+  b.reads.length=0; b.ctx.processRecoveryQueue();
+  assert.equal(b.reads.length,0,'An empty queue check must not open the spreadsheet');
 });
 test('retrying recovery after a lost response does not create another queue row or email', () => {
   const b=ready(); create(b);

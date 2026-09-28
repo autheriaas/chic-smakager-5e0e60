@@ -23,6 +23,26 @@ test('portfolio filters cloud media and opens the full image', async ({ page }) 
   await expect(page.locator('.wc-lightbox img.main')).toHaveAttribute('src', full);
 });
 
+test('entrance motion respects the reduced-motion preference', async ({ page }) => {
+  await page.route('**/*', route => {
+    const url = new URL(route.request().url());
+    if (url.hostname !== '127.0.0.1') return route.abort();
+    if (url.pathname.startsWith('/.netlify/functions/')) return route.fulfill({ status: 503 });
+    return route.continue();
+  });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  await expect(page.locator('.hero h1')).toHaveCSS('animation-name', 'heroEnter');
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.reload();
+  await expect(page.locator('.hero h1')).toHaveCSS('animation-name', 'none');
+  const tile = page.locator('#more-work .wc-work-item').first();
+  await tile.scrollIntoViewIfNeeded();
+  await expect(tile).toBeVisible();
+  expect(await tile.evaluate(element => element.getAnimations().length)).toBe(0);
+});
+
 async function fixture(page) {
   const b = backend(); b.setup();
   Object.assign(process.env, { APPS_SCRIPT_URL: 'https://script.google.com/macros/s/test/exec', SITE_URL: 'https://example.test', BACKEND_SECRET: b.properties.get('BACKEND_SECRET') });

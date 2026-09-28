@@ -430,6 +430,20 @@ footer{border-top:1px solid var(--border);padding:28px 0;background:rgba(33,23,5
 .reveal{opacity:0;transform:translateY(30px) scale(.975);transition:opacity .62s cubic-bezier(.16,.84,.44,1),transform .62s cubic-bezier(.16,.84,.44,1);transition-delay:var(--reveal-delay,0ms);will-change:opacity,transform}
 .reveal.in-view{opacity:1;transform:none}
 
+/* A short opening sequence gives the first screen a clear visual rhythm. */
+@media (prefers-reduced-motion:no-preference){
+  .hero .eyebrow,.hero h1,.hero .lede,.hero-actions,.hero .stat,.hero-image{animation:heroEnter .7s cubic-bezier(.16,.84,.44,1) both}
+  .hero h1{animation-delay:.07s}
+  .hero .lede{animation-delay:.14s}
+  .hero-actions{animation-delay:.21s}
+  .hero-image{animation-delay:.16s}
+  .hero .stat:nth-child(1){animation-delay:.28s}
+  .hero .stat:nth-child(2){animation-delay:.34s}
+  .hero .stat:nth-child(3){animation-delay:.4s}
+  .hero .stat:nth-child(4){animation-delay:.46s}
+}
+@keyframes heroEnter{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
 /* ---- count-up pop ---- */
 .count-pop{display:inline-block;animation:countPop .4s cubic-bezier(.34,1.56,.64,1) both}
 @keyframes countPop{0%{transform:scale(1)}55%{transform:scale(1.18)}100%{transform:scale(1)}}
@@ -1103,7 +1117,7 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
 
   if (!prefersReducedMotion) {
     /* ---- scroll reveal, staggered ---- */
-    var revealSelector = '.section-head, .card, .stat, .work-grid-img, .work-grid-video, .style-card';
+    var revealSelector = '.section-head, .card, .filter-bar, .style-card';
     var revealTargets = Array.prototype.slice.call(document.querySelectorAll(revealSelector));
     revealTargets.forEach(function (el) { el.classList.add('reveal'); });
     // simple staggered delay based on position within its own parent
@@ -1169,6 +1183,25 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
       if (alreadyVisible) { el.classList.add('in-view'); scheduleSettle(el); }
       else io.observe(el);
     });
+
+    /* Reveal portfolio tiles as each row enters view. Web Animations leaves
+       the filter's CSS transitions untouched after the entrance finishes. */
+    if (Element.prototype.animate) {
+      var tileIo = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          tileIo.unobserve(entry.target);
+          var siblings = Array.prototype.slice.call(entry.target.parentElement.children);
+          var delay = (siblings.indexOf(entry.target) % 4) * 55;
+          entry.target.animate([
+            { opacity: 0, transform: 'translateY(16px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+          ], { duration: 520, delay: delay, easing: 'cubic-bezier(.16,.84,.44,1)', fill: 'backwards' });
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -5% 0px' });
+      Array.prototype.slice.call(document.querySelectorAll('#more-work .wc-work-item'))
+        .forEach(function (item) { tileIo.observe(item); });
+    }
 
     /* ---- count-up numbers in the hero stat row (skips the range + the live rating) ---- */
     var countTargets = [];

@@ -1202,8 +1202,7 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
       else io.observe(el);
     });
 
-    /* Reveal portfolio tiles as each row enters view. Images keep their
-       vertical entrance; videos use the alternating horizontal entrance. */
+    /* Reveal image and video tiles vertically as each row enters view. */
     if (Element.prototype.animate) {
       var tileIo = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
@@ -1212,11 +1211,9 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
           var siblings = Array.prototype.slice.call(entry.target.parentElement.children);
           var position = siblings.indexOf(entry.target);
           var delay = (position % 4) * 55;
-          var offset = position % 2 === 0 ? -14 : 14;
-          var imageTile = entry.target.parentElement.classList.contains('work-grid-img');
           entry.target.animate([
-            { opacity: 0, transform: imageTile ? 'translateY(16px)' : 'translateX(' + offset + 'px) scale(.985)' },
-            { opacity: 1, transform: imageTile ? 'translateY(0)' : 'none' }
+            { opacity: 0, transform: 'translateY(16px)' },
+            { opacity: 1, transform: 'translateY(0)' }
           ], { duration: 520, delay: delay, easing: 'cubic-bezier(.16,.84,.44,1)', fill: 'backwards' });
         });
       }, { threshold: 0.08, rootMargin: '0px 0px -5% 0px' });

@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://autherias.netlify.app/</loc>
+    <loc>https://artisticlaudia.netlify.app/</loc>
     <lastmod>2026-09-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://autherias.netlify.app/#more-work</loc>
+    <loc>https://artisticlaudia.netlify.app/#more-work</loc>
     <lastmod>2026-09-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://autherias.netlify.app/#customs</loc>
+    <loc>https://artisticlaudia.netlify.app/#customs</loc>
     <lastmod>2026-09-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://autherias.netlify.app/#pricing</loc>
+    <loc>https://artisticlaudia.netlify.app/#pricing</loc>
     <lastmod>2026-09-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://autherias.netlify.app/#payments</loc>
+    <loc>https://artisticlaudia.netlify.app/#payments</loc>
     <lastmod>2026-09-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://autherias.netlify.app/#reviews</loc>
+    <loc>https://artisticlaudia.netlify.app/#reviews</loc>
     <lastmod>2026-09-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://autherias.netlify.app/#cta</loc>
+    <loc>https://artisticlaudia.netlify.app/#cta</loc>
     <lastmod>2026-09-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>

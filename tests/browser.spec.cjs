@@ -32,7 +32,8 @@ test('entrance motion respects the reduced-motion preference', async ({ page }) 
   });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
-  await expect(page.locator('.hero h1')).toHaveCSS('animation-name', 'heroEnter');
+  await expect(page.locator('.hero h1')).toHaveCSS('animation-name', 'heroCopyEnter');
+  await expect(page.locator('.hero-image')).toHaveCSS('animation-name', 'heroImageEnter');
 
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.reload();

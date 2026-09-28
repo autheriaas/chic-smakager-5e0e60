@@ -234,11 +234,6 @@ button{font-family:inherit}
 .build-body span.sub{font-size:.85rem;color:var(--muted)}
 .build-arrow{color:var(--teal);font-weight:700}
 
-/* reference wall */
-.ref-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.ref-grid img{aspect-ratio:1/1;object-fit:cover;border-radius:16px;border:1px solid var(--border)}
-@media (min-width:640px){.ref-grid{grid-template-columns:repeat(4,1fr)}}
-
 /* filter bar (more work) */
 .filter-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
 .filter-btn{font-size:.83rem;font-weight:700;color:var(--muted);background:var(--panel);border:1.5px solid var(--border);border-radius:999px;padding:9px 18px;cursor:pointer;transition:all .2s ease}
@@ -251,16 +246,16 @@ button{font-family:inherit}
 .emote-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s ease}
 .emote-slide.active{opacity:1}
 .emote-slide-tag{position:absolute;left:10px;bottom:10px;background:rgba(20,12,32,.7);color:var(--cream);font-size:.68rem;font-weight:800;padding:4px 10px;border-radius:999px;letter-spacing:.02em}
-.work-item{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--panel);display:inline-block;width:100%;break-inside:avoid;margin-bottom:12px}
-.work-item img{display:block;width:100%;height:auto}
+.work-item{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--panel);display:block;width:100%}
+.work-item img{display:block;width:100%;height:100%;aspect-ratio:1/1;object-fit:cover}
 .work-item:has(img){cursor:pointer}
 .work-item video{aspect-ratio:16/9;width:100%;object-fit:cover}
 .work-item .cap{padding:10px 12px;font-size:.85rem;font-weight:600}
 .wc-lightbox img.main{aspect-ratio:auto;width:auto;max-width:100%;height:auto;max-height:70vh;background:#161018}
 .wc-lightbox .lb-cta{margin-top:14px}
-.work-grid-img{column-count:2;-webkit-column-count:2;column-gap:12px}
+.work-grid-img{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .work-grid-video{display:grid;grid-template-columns:1fr;gap:16px;align-items:start}
-@media (min-width:640px){.work-grid-img{column-count:4;-webkit-column-count:4}.work-grid-video{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:640px){.work-grid-img{grid-template-columns:repeat(4,1fr)}.work-grid-video{grid-template-columns:repeat(2,1fr)}}
 @media (min-width:960px){.work-grid-video{grid-template-columns:repeat(3,1fr)}}
 
 /* customs */
@@ -486,8 +481,6 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
 .work-item.wc-hide{opacity:0;transform:scale(.94);pointer-events:none}
 .work-item img,.work-item video{transition:transform .5s cubic-bezier(.16,.84,.44,1)}
 .work-item:hover img{transform:scale(1.06)}
-.ref-grid img{transition:transform .35s cubic-bezier(.16,.84,.44,1),border-color .25s ease}
-.ref-grid img:hover{transform:scale(1.05);border-color:var(--magenta)}
 .build-media img{transition:transform .55s cubic-bezier(.16,.84,.44,1)}
 .build-card:hover .build-media img{transform:scale(1.07)}
 .build-arrow{display:inline-block;transition:transform .28s cubic-bezier(.34,1.56,.64,1)}
@@ -534,7 +527,7 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
     <a href="#" class="logo"><img src="assets/images/wildcut-logo.png" alt="Claudia's Community logo"/>Claudia's Community</a>
     <div class="nav-right">
       <nav class="nav-links">
-        <a href="#gallery">Portfolio</a>
+        <a href="#more-work">Portfolio</a>
         <a href="#pricing">Pricing</a>
         <a href="#faq">FAQ</a>
         <a href="#cta">Contact</a>
@@ -546,9 +539,7 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
     </div>
   </div>
   <nav class="mobile-menu">
-    <a href="#gallery">Portfolio</a>
-    <a href="#gallery">Gallery</a>
-    <a href="#more-work">3D &amp; More</a>
+    <a href="#more-work">Portfolio</a>
     <a href="#customs">What I Create</a>
     <a href="#pricing">Pricing</a>
     <a href="#payments">Payments</a>
@@ -584,140 +575,134 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
   </div>
 </section>
 
-<!-- REFERENCE WALL -->
-<section id="gallery" class="section">
-  <div class="container">
-    <div class="section-head">
-      <div class="eyebrow">Reference Wall</div>
-      <h2>Original characters &amp; fan art</h2>
-      <p class="section-lede">A wall of finished pieces — the range of styles, characters and scenes commissions can cover.</p>
-    </div>
-    <div class="ref-grid">
-      <img src="assets/images/scythe-woman-oc.jpg" alt="Scythe-wielding original character illustration" loading="lazy"/>
-      <img src="assets/images/elf-staff-girl.jpg" alt="Elf staff-wielder character illustration" loading="lazy"/>
-      <img src="assets/images/teal-dress-oc.jpg" alt="Character illustration in a teal dress" loading="lazy"/>
-      <img src="assets/images/toga-sakura-fanart.jpg" alt="Sakura fan art in a toga-style outfit" loading="lazy"/>
-      <img src="assets/images/man-with-dog-oc.jpg" alt="Original character illustration with his dog" loading="lazy"/>
-      <img src="assets/images/furry-snow-walk.jpg" alt="Two anthro characters walking through snow" loading="lazy"/>
-      <img src="assets/images/furry-gamenight.jpg" alt="Anthro characters at a game night" loading="lazy"/>
-      <img src="assets/images/red-panda-oc.jpg" alt="Red panda original character illustration" loading="lazy"/>
-      <img src="assets/images/chained-fox-flame-oc.jpg" alt="Chained fox character illustration in flames" loading="lazy"/>
-      <img src="assets/images/flying-mascot-skyline.jpg" alt="Flying mascot character illustration over a city skyline" loading="lazy"/>
-      <img src="assets/images/man-with-huskies-oc.jpg" alt="Original character illustration holding two husky dogs at sunset" loading="lazy"/>
-      <img src="assets/images/business-woman-portrait.jpg" alt="Business-attire character portrait illustration" loading="lazy"/>
-      <img src="assets/images/pixel-tavern-scene.jpg" alt="Pixel art tavern scene illustration" loading="lazy"/>
-      <img src="assets/images/dark-ranger-oc.jpg" alt="Dark ranger original character illustration" loading="lazy"/>
-      <img src="assets/images/cyborg-zombie-oc.jpg" alt="Cyborg zombie original character illustration" loading="lazy"/>
-      <img src="assets/images/devil-hunter-oc.jpg" alt="Devil hunter original character illustration" loading="lazy"/>
-      <img src="assets/images/chained-rabbit-oc.jpg" alt="Chained rabbit original character illustration" loading="lazy"/>
-      <img src="assets/images/nightmare-xmas-fanart.jpg" alt="Nightmare Before Christmas fan art banner" loading="lazy"/>
-      <img src="assets/images/warhammer-fanart.jpg" alt="Warhammer space marine fan art" loading="lazy"/>
-      <img src="assets/images/devil-throne-oc.jpg" alt="Devil on a throne original character illustration" loading="lazy"/>
-      <img src="assets/images/onepiece-fanart2.jpg" alt="One Piece fan art scene" loading="lazy"/>
-      <img src="assets/images/jungle-argument.jpg" alt="Two characters arguing in a jungle scene illustration" loading="lazy"/>
-      <img src="assets/images/angel-wings-oc.jpg" alt="Angel-winged original character illustration" loading="lazy"/>
-      <img src="assets/images/rooftop-stars-oc.jpg" alt="Character lying on a rooftop under the stars illustration" loading="lazy"/>
-      <img src="assets/images/elf-gunslinger-oc.jpg" alt="Elf gunslinger original character illustration" loading="lazy"/>
-      <img src="assets/images/trident-warrior-oc.jpg" alt="Trident warrior original character illustration" loading="lazy"/>
-      <img src="assets/images/kitsune-girl.jpg" alt="Kitsune girl original character illustration" loading="lazy"/>
-      <img src="assets/images/streetwear-pfp.jpg" alt="Streetwear-style character illustration" loading="lazy"/>
-      <img src="assets/images/smoking-pipe-oc.jpg" alt="Original character illustration with a smoking pipe" loading="lazy"/>
-      <img src="assets/images/glowing-forest-oc.jpg" alt="Character illustration walking into a glowing forest" loading="lazy"/>
-      <img src="assets/images/3d-ship-render.jpg" alt="Spaceship concept art illustration" loading="lazy"/>
-    </div>
-  </div>
-</section>
-
 <!-- MORE WORK / FILTERABLE -->
 <section id="more-work" class="section section-alt">
   <div class="container">
     <div class="section-head">
-      <div class="eyebrow">Beyond Illustration</div>
-      <h2>3D builds, motion tests &amp; extra work</h2>
-      <p class="section-lede">Also on offer: 3D asset work, rigging and motion tests — plus mascots, emotes, and one-off character commissions.</p>
+      <div class="eyebrow">Portfolio</div>
+      <h2>Our work</h2>
+      <p class="section-lede">Character art, concept art, 2D &amp; 3D models, speedpaints and stream assets &mdash; pick a category or browse it all.</p>
     </div>
 
-    <div class="filter-bar" role="tablist" aria-label="Filter extra work by category">
-      <button type="button" class="filter-btn" data-filter="all">All Work</button>
-      <button type="button" class="filter-btn" data-filter="3d">3D</button>
-      <button type="button" class="filter-btn active" data-filter="animated">2D &amp; Animated</button>
-      <button type="button" class="filter-btn" data-filter="pfp">PFP, Banners &amp; Character Art</button>
-      <button type="button" class="filter-btn" data-filter="emotes">Stream Assets &amp; Emotes</button>
+    <div class="filter-bar" role="tablist" aria-label="Filter our work by category">
+      <button type="button" class="filter-btn active" data-filter="all">All Work</button>
+      <button type="button" class="filter-btn" data-filter="2d-3d-models">2D &amp; 3D Models</button>
+      <button type="button" class="filter-btn" data-filter="character-art">Character Art</button>
+      <button type="button" class="filter-btn" data-filter="concept-art">Concept Art</button>
+      <button type="button" class="filter-btn" data-filter="speedpaint">Speedpaint</button>
+      <button type="button" class="filter-btn" data-filter="stream-assets">Stream Assets</button>
     </div>
 
-    <div class="work-group" data-cat="3d">
+    <div class="work-group" data-cat="images">
       <div class="work-grid-img">
-        <div class="work-item wc-work-item" data-item-cat="3d"><img src="assets/images/3d-bottle-render.jpg" alt="3D rendered bottle asset" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="3d"><img src="assets/images/3d-character-bust.jpg" alt="3D rendered character bust" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="3d"><img src="assets/images/3d-drone-rig.jpg" alt="3D rendered drone rig" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="3d"><img src="assets/images/3d-paint-roller.jpg" alt="3D rendered paint roller asset" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="3d"><img src="assets/images/3d-saloon-render.jpg" alt="3D rendered saloon scene" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="3d"><img src="assets/images/3d-tool-render.jpg" alt="3D rendered tool asset" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="3d"><img src="assets/images/3d-toy-blaster.jpg" alt="3D rendered toy blaster" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="3d"><img src="assets/images/3d-weapon-lineup.jpg" alt="3D rendered weapon lineup" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="3d"><img src="assets/images/3d-weapon-set.jpg" alt="3D rendered weapon prop set" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="3d"><img src="assets/images/3d-potion-vial-render.jpg" alt="3D rendered glowing potion vial asset" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="3d"><img src="assets/images/3d-crossbow-trio.jpg" alt="3D rendered crossbow trio asset" loading="lazy"/></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/ben-2.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/ben-2.webp" alt="2D & 3D model work by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/g8xsjgsbsaalype.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/g8xsjgsbsaalype.webp" alt="2D & 3D model work by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/g8xtskyb0aaryxl.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/g8xtskyb0aaryxl.webp" alt="2D & 3D model work by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/g8xtslobaaadk1b.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/g8xtslobaaadk1b.webp" alt="2D & 3D model work by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/g8xtsltaqaadqt3.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/g8xtsltaqaadqt3.webp" alt="2D & 3D model work by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hfmtqgnwaaaj7is.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hfmtqgnwaaaj7is.webp" alt="2D & 3D model work by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hfmtql0xyaazm7r.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hfmtql0xyaazm7r.webp" alt="2D & 3D model work by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hfmtqlxweaayhnv.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hfmtqlxweaayhnv.webp" alt="2D & 3D model work by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hfmtqlzxqaafibh.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hfmtqlzxqaafibh.webp" alt="2D & 3D model work by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hlziwrjxmaao575.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hlziwrjxmaao575.webp" alt="2D & 3D model work by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hlziwrkw4aah9nm.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hlziwrkw4aah9nm.webp" alt="2D & 3D model work by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hlziwrtwsaa5mtt.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hlziwrtwsaa5mtt.webp" alt="2D & 3D model work by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hs5szl5aiaauegt.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hs5szl5aiaauegt.webp" alt="2D & 3D model work by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/1-2.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/1-2.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/1-4.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/1-4.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/1-7.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/1-7.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/1-8.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/1-8.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/2-2.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/2-2.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/art.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/art.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/banner.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/banner.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/g-3jqihw4aablst.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/g-3jqihw4aablst.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/g-r5fv4woaa3egu.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/g-r5fv4woaa3egu.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/g8r7n74wiaenucd.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/g8r7n74wiaenucd.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/g8sc9k-wqaqtaki.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/g8sc9k-wqaqtaki.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/g8xn4teayaa9xy.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/g8xn4teayaa9xy.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/g8xybzpwkaiiwh3.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/g8xybzpwkaiiwh3.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/gsddwncxwaawjsa.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/gsddwncxwaawjsa.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/gsfvmcew0aezf1z.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/gsfvmcew0aezf1z.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/guadafvwqaa2nad.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/guadafvwqaa2nad.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/gupscxpw0aeli5r.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/gupscxpw0aeli5r.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/gwqnbj0wgaa-pvr.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/gwqnbj0wgaa-pvr.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hbgmtlebuamighi.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hbgmtlebuamighi.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hcdp49cbeaequav.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hcdp49cbeaequav.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hfms4g7xgaanjix.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hfms4g7xgaanjix.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hkc8l2cwuaasr1c.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hkc8l2cwuaasr1c.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/image-20.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/image-20.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/image-3.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/image-3.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/pfp.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/pfp.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/qs-22-25059.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/qs-22-25059.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/qs-22-25315.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/qs-22-25315.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/qs-22-32978.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/qs-22-32978.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/qs-31-33341-1.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/qs-31-33341-1.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/qs-34-29348.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/qs-34-29348.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/qs-34-48632-bg-copy-jpg11111.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/qs-34-48632-bg-copy-jpg11111.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/qs-404-50896.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/qs-404-50896.webp" alt="Character art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/1-1.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/1-1.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/1-3.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/1-3.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/1-9.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/1-9.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/1500x500.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/1500x500.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/g8dligsxsaakqu4.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/g8dligsxsaakqu4.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/g9ujrzrw4aa-tud.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/g9ujrzrw4aa-tud.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/gsdd1kdw0aej9i0.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/gsdd1kdw0aej9i0.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/gsi-qz3xyaa1f3m.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/gsi-qz3xyaa1f3m.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/gstjx5oxaaa-qdu.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/gstjx5oxaaa-qdu.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/guadjerxwaanj3l.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/guadjerxwaanj3l.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/guuts-sxoaaddhr.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/guuts-sxoaaddhr.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/gvcee-twwaeksh2.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/gvcee-twwaeksh2.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/gwqoqqywoaaiug0.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/gwqoqqywoaaiug0.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hf15w-weaa-p8-1.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hf15w-weaa-p8-1.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hf8z5r9aiaavqc.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hf8z5r9aiaavqc.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/qs-22-29052.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/qs-22-29052.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/qs-22-32836.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/qs-22-32836.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/qs-3-22680.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/qs-3-22680.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/qs-3-22960-re-draw-r1.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/qs-3-22960-re-draw-r1.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/qs-34-37366-new-1.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/qs-34-37366-new-1.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/qs-34-39560-r3-1-jpgbbbb.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/qs-34-39560-r3-1-jpgbbbb.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/qs-34-40235-color-jpg-dsvsd-jpg-fff.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/qs-34-40235-color-jpg-dsvsd-jpg-fff.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/qs-34-50469-bg-final.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/qs-34-50469-bg-final.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="concept-art"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/screenshot-2026-07-11-163618.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/screenshot-2026-07-11-163618.webp" alt="Concept art by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="stream-assets"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hj47uewxwaaifhq.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hj47uewxwaaifhq.webp" alt="Stream asset by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="stream-assets"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hj47ueyw8aaz9ir.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hj47ueyw8aaz9ir.webp" alt="Stream asset by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="stream-assets"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hj47uezxwaao-53.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hj47uezxwaao-53.webp" alt="Stream asset by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="stream-assets"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hj47uf5wiaaydcr.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hj47uf5wiaaydcr.webp" alt="Stream asset by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="stream-assets"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hkrrlx1wkaalolm.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hkrrlx1wkaalolm.webp" alt="Stream asset by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="stream-assets"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hkrrlxlwqaatzoc.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hkrrlxlwqaatzoc.webp" alt="Stream asset by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="stream-assets"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hkrrlxpxqaab3ei.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hkrrlxpxqaab3ei.webp" alt="Stream asset by Claudia's Community" loading="lazy" decoding="async"/></div>
+        <div class="work-item wc-work-item" data-item-cat="stream-assets"><img src="https://claudia-media.burhangaming0123.workers.dev/thumbs/hkrrlxyxyaad30j.webp" data-full="https://claudia-media.burhangaming0123.workers.dev/images/hkrrlxyxyaad30j.webp" alt="Stream asset by Claudia's Community" loading="lazy" decoding="async"/></div>
       </div>
     </div>
 
-    <div class="work-group" data-cat="animated">
+    <div class="work-group" data-cat="videos">
       <div class="work-grid-video">
-        <div class="work-item wc-work-item" data-item-cat="3d animated"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="metadata" poster="assets/images/poster-2d-vtuber-concept.jpg"><source src="assets/videos/2d-vtuber-concept.mp4" type="video/mp4"/></video><div class="cap">2D VTuber concept turntable</div></div>
-        <div class="work-item wc-work-item" data-item-cat="3d animated"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="metadata" poster="assets/images/poster-3d-asset-process.jpg"><source src="assets/videos/3d-asset-process.mp4" type="video/mp4"/></video><div class="cap">3D asset build process</div></div>
-        <div class="work-item wc-work-item" data-item-cat="3d animated"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="metadata" poster="assets/images/poster-animated-cyborg-oc.jpg"><source src="assets/videos/animated-cyborg-oc.mp4" type="video/mp4"/></video><div class="cap">Animated cyborg OC test</div></div>
-        <div class="work-item wc-work-item" data-item-cat="3d animated"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="metadata" poster="assets/images/poster-animated-energy-banner.jpg"><source src="assets/videos/animated-energy-banner.mp4" type="video/mp4"/></video><div class="cap">Animated energy stream banner</div></div>
-        <div class="work-item wc-work-item" data-item-cat="3d animated"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="metadata" poster="assets/images/poster-animated-fire-king.jpg"><source src="assets/videos/animated-fire-king.mp4" type="video/mp4"/></video><div class="cap">Animated fire king test</div></div>
-        <div class="work-item wc-work-item" data-item-cat="3d animated"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="metadata" poster="assets/images/poster-animated-portrait.jpg"><source src="assets/videos/animated-portrait.mp4" type="video/mp4"/></video><div class="cap">Animated character portrait</div></div>
-        <div class="work-item wc-work-item" data-item-cat="3d animated"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="metadata" poster="assets/images/poster-brb-screen-animation.jpg"><source src="assets/videos/brb-screen-animation.mp4" type="video/mp4"/></video><div class="cap">Animated BRB stream screen</div></div>
-        <div class="work-item wc-work-item" data-item-cat="3d animated"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="metadata" poster="assets/images/poster-rigged-creature-test.jpg"><source src="assets/videos/rigged-creature-test.mp4" type="video/mp4"/></video><div class="cap">Rigged creature test</div></div>
-        <div class="work-item wc-work-item" data-item-cat="3d animated"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="metadata" poster="assets/images/poster-vtuber-3d-showcase.jpg"><source src="assets/videos/vtuber-3d-showcase.mp4" type="video/mp4"/></video><div class="cap">VTuber 3D showcase</div></div>
-        <div class="work-item wc-work-item" data-item-cat="3d animated"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="metadata" poster="assets/images/poster-vtuber-rig-preview.jpg"><source src="assets/videos/vtuber-rig-preview.mp4" type="video/mp4"/></video><div class="cap">VTuber rig preview</div></div>
-        <div class="work-item wc-work-item" data-item-cat="3d animated"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="metadata" poster="assets/images/poster-3d-male-character-showcase.jpg"><source src="assets/videos/3d-male-character-showcase.mp4" type="video/mp4"/></video><div class="cap">3D character model showcase</div></div>
-      </div>
-    </div>
-
-    <div class="work-group" data-cat="pfp">
-      <div class="work-grid-img">
-        <div class="work-item wc-work-item" data-item-cat="pfp"><img src="assets/images/blue-mascot-logo.jpg" alt="Blue mascot logo design" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="pfp"><img src="assets/images/strawberry-mascot.jpg" alt="Strawberry mascot design" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="pfp"><img src="assets/images/roblox-tux-mascot.jpg" alt="Roblox tuxedo mascot design" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="pfp"><img src="assets/images/roblox-avatar.jpg" alt="Roblox avatar design" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="pfp"><img src="assets/images/underwater-pfp-portrait.jpg" alt="Underwater-themed profile picture commission" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="pfp"><img src="assets/images/crossover-collage.jpg" alt="Character crossover collage" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="pfp"><img src="assets/images/cyberpunk-lab-guy.jpg" alt="Cyberpunk lab original character" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="pfp"><img src="assets/images/deadpool-fanart.jpg" alt="Deadpool fan art" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="pfp"><img src="assets/images/vape-pen-art.jpg" alt="Stylised vape pen illustration" loading="lazy"/></div>
-      </div>
-    </div>
-
-    <div class="work-group" data-cat="emotes">
-      <div class="emote-slideshow-row">
-        <div class="emote-slideshow" id="emoteSlideshow" aria-label="Rotating preview of stream emotes" role="img">
-          <img class="emote-slide active" src="assets/images/chibi-emote-wave.jpg" alt="Chibi wave emote"/>
-          <img class="emote-slide" src="assets/images/chibi-emote-love.jpg" alt="Chibi love emote"/>
-          <img class="emote-slide" src="assets/images/chibi-emote-listen.jpg" alt="Chibi listening emote"/>
-          <img class="emote-slide" src="assets/images/chibi-emote-angry.jpg" alt="Chibi angry emote"/>
-          <span class="emote-slide-tag">Emote pack preview</span>
-        </div>
-        <div class="emote-slideshow" id="stickerSlideshow" aria-label="Rotating preview of animated stream stickers" role="img">
-          <video class="emote-slide active" src="assets/videos/chibi-wave-sticker.mp4" muted loop autoplay playsinline aria-label="Chibi wave sticker"></video>
-          <video class="emote-slide" src="assets/videos/chibi-thumbsup-sticker.mp4" muted loop autoplay playsinline aria-label="Chibi thumbs-up sticker"></video>
-          <video class="emote-slide" src="assets/videos/chibi-lightsaber-sticker.mp4" muted loop autoplay playsinline aria-label="Chibi lightsaber sticker"></video>
-          <video class="emote-slide" src="assets/videos/chibi-heart-sticker.mp4" muted loop autoplay playsinline aria-label="Chibi heart sticker"></video>
-          <span class="emote-slide-tag">Sticker pack preview</span>
-        </div>
-        <div class="emote-slideshow" id="pfpEmoteSlideshow" aria-label="Rotating preview of PFP expression emotes" role="img">
-          <img class="emote-slide active" src="assets/images/pfp-calm.jpg" alt="Calm-pose PFP emote"/>
-          <img class="emote-slide" src="assets/images/pfp-laughing.jpg" alt="Laughing-pose PFP emote"/>
-          <img class="emote-slide" src="assets/images/pfp-angry.jpg" alt="Angry-pose PFP emote"/>
-          <span class="emote-slide-tag">PFP emote pack preview</span>
-        </div>
-      </div>
-      <div class="work-grid-img">
-        <div class="work-item wc-work-item" data-item-cat="emotes"><img src="assets/images/vtuber-sprite.jpg" alt="VTuber sprite asset" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="emotes"><img src="assets/images/vtuber-desk-banner.jpg" alt="VTuber desk stream banner" loading="lazy"/></div>
-        <div class="work-item wc-work-item" data-item-cat="emotes"><img src="assets/images/streamer-room.jpg" alt="Streamer room illustration" loading="lazy"/></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/0001-0400.webp" aria-label="2D & 3D model work by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/0001-0400.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/0002-0200.webp" aria-label="2D & 3D model work by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/0002-0200.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/0164-0366-1.webp" aria-label="2D & 3D model work by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/0164-0366-1.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/1.webp" aria-label="2D & 3D model work by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/1.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/2026-03-11-15-38-11-1.webp" aria-label="2D & 3D model work by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/2026-03-11-15-38-11-1.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/animated-cyborg-oc.webp" aria-label="2D & 3D model work by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/animated-cyborg-oc.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/animated-portrait.webp" aria-label="2D & 3D model work by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/animated-portrait.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/claudia-animated-banner-made-for-my-client-on-di.webp" aria-label="2D & 3D model work by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/claudia-animated-banner-made-for-my-client-on-di.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/claudia-hey-i-just-finished-the-complete-animati.webp" aria-label="2D & 3D model work by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/claudia-hey-i-just-finished-the-complete-animati.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/claudia-i-recently-created-a-2d-concept-model-an.webp" aria-label="2D & 3D model work by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/claudia-i-recently-created-a-2d-concept-model-an.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/final-new-1-1-1.webp" aria-label="2D & 3D model work by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/final-new-1-1-1.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/gzpqful4y0xgpcqw.webp" aria-label="2D & 3D model work by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/gzpqful4y0xgpcqw.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/vtuber-rig-preview.webp" aria-label="2D & 3D model work by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/vtuber-rig-preview.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/z3d-character.webp" aria-label="2D & 3D model work by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/z3d-character.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="2d-3d-models"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/z3d-model-1.webp" aria-label="2D & 3D model work by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/z3d-model-1.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="character-art concept-art"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/claudia-animated-character-art-i-made-for-my-cli.webp" aria-label="Character art by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/claudia-animated-character-art-i-made-for-my-cli.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="speedpaint"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/0404-1.webp" aria-label="Speedpaint by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/0404-1.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="speedpaint"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/0624sdf.webp" aria-label="Speedpaint by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/0624sdf.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="speedpaint"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/2026-06-23-09-44-20-1-1.webp" aria-label="Speedpaint by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/2026-06-23-09-44-20-1-1.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="speedpaint"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/2026-06-24-00-36-51cc-1.webp" aria-label="Speedpaint by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/2026-06-24-00-36-51cc-1.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="speedpaint"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/2026-06-24-12-40-58d-1.webp" aria-label="Speedpaint by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/2026-06-24-12-40-58d-1.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="speedpaint"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/3d-asset-process.webp" aria-label="Speedpaint by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/3d-asset-process.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="stream-assets"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/g95oatqxsaahral.webp" aria-label="Stream asset by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/g95oatqxsaahral.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="stream-assets"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/g95oatsxaaajaam.webp" aria-label="Stream asset by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/g95oatsxaaajaam.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="stream-assets"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/g95oattwoaayphl.webp" aria-label="Stream asset by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/g95oattwoaayphl.mp4" type="video/mp4"/></video></div>
+        <div class="work-item wc-work-item" data-item-cat="stream-assets"><video controls muted loop playsinline controlslist="nodownload" disablepictureinpicture preload="none" poster="https://claudia-media.burhangaming0123.workers.dev/posters/g95oatvweaasqat.webp" aria-label="Stream asset by Claudia's Community"><source src="https://claudia-media.burhangaming0123.workers.dev/videos/g95oatvweaasqat.mp4" type="video/mp4"/></video></div>
       </div>
     </div>
   </div>
@@ -1472,7 +1457,7 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
     function wcRender() {
       var img = wcState.list[wcState.idx].querySelector('img');
       var mainEl = wcOverlay.querySelector('img.main');
-      mainEl.src = img.src;
+      mainEl.src = img.getAttribute('data-full') || img.src;
       mainEl.alt = img.alt || '';
     }
     function wcOpen(item) {

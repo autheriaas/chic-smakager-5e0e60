@@ -26,7 +26,7 @@
     links: {
       commissionForm: "#cta",
       pricing: "#pricing",
-      gallery: "#gallery",
+      gallery: "#more-work",
       faq: "#faq",
       howItWorks: "#how-it-works",
       payments: "#payments",

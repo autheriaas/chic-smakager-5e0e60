@@ -4,6 +4,25 @@ const { backend } = require('./sheets-mock.cjs');
 const orders = require('../netlify/functions/orders').handler;
 const reviews = require('../netlify/functions/reviews').handler;
 
+test('portfolio filters cloud media and opens the full image', async ({ page }) => {
+  await page.route('**/*', route => {
+    const url = new URL(route.request().url());
+    if (url.hostname !== '127.0.0.1') return route.abort();
+    if (url.pathname.startsWith('/.netlify/functions/')) return route.fulfill({ status: 503 });
+    return route.continue();
+  });
+  await page.goto('/');
+  await expect(page.locator('#gallery')).toHaveCount(0);
+  await expect(page.locator('#more-work .wc-work-item')).toHaveCount(103);
+  await page.locator('.filter-btn[data-filter="character-art"]').click();
+  const first = page.locator('#more-work .wc-work-item[data-item-cat~="character-art"]').first();
+  await expect(first).toBeVisible();
+  await expect(first.locator('img')).toHaveAttribute('data-full', /\/images\/.*\.webp$/);
+  const full = await first.locator('img').getAttribute('data-full');
+  await first.click();
+  await expect(page.locator('.wc-lightbox img.main')).toHaveAttribute('src', full);
+});
+
 async function fixture(page) {
   const b = backend(); b.setup();
   Object.assign(process.env, { APPS_SCRIPT_URL: 'https://script.google.com/macros/s/test/exec', SITE_URL: 'https://example.test', BACKEND_SECRET: b.properties.get('BACKEND_SECRET') });

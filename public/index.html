@@ -428,11 +428,12 @@ footer{border-top:1px solid var(--border);padding:28px 0;background:rgba(33,23,5
    The stagger lives in a custom property that ONLY .reveal reads, so when
    JS removes the class after the animation the delay disappears with it —
    it can never leak into :hover transitions later. */
-.reveal{opacity:0;transform:translate3d(var(--reveal-x,0px),var(--reveal-y,0px),0) scale(.985);transition:opacity .62s cubic-bezier(.16,.84,.44,1),transform .62s cubic-bezier(.16,.84,.44,1);transition-delay:var(--reveal-delay,0ms);will-change:opacity,transform}
+.reveal{opacity:0;transform:translate3d(var(--reveal-x,0px),var(--reveal-y,0px),0) scale(var(--reveal-scale,.985));transition:opacity .62s cubic-bezier(.16,.84,.44,1),transform .62s cubic-bezier(.16,.84,.44,1);transition-delay:var(--reveal-delay,0ms);will-change:opacity,transform}
 .section-head.reveal{--reveal-x:-22px}
 .filter-bar.reveal{--reveal-y:10px}
 .card.reveal:nth-child(odd),.style-card.reveal:nth-child(odd){--reveal-x:-16px}
 .card.reveal:nth-child(even),.style-card.reveal:nth-child(even){--reveal-x:16px}
+#pricing .price-card.reveal{--reveal-x:0px;--reveal-y:30px;--reveal-scale:.975}
 .reveal.in-view{opacity:1;transform:none}
 
 /* Let the copy and artwork meet from opposite sides; stats settle in place. */
@@ -1194,8 +1195,8 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
       else io.observe(el);
     });
 
-    /* Reveal portfolio tiles as each row enters view. Web Animations leaves
-       the filter's CSS transitions untouched after the entrance finishes. */
+    /* Reveal portfolio tiles as each row enters view. Images keep their
+       vertical entrance; videos use the alternating horizontal entrance. */
     if (Element.prototype.animate) {
       var tileIo = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
@@ -1205,9 +1206,10 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
           var position = siblings.indexOf(entry.target);
           var delay = (position % 4) * 55;
           var offset = position % 2 === 0 ? -14 : 14;
+          var imageTile = entry.target.parentElement.classList.contains('work-grid-img');
           entry.target.animate([
-            { opacity: 0, transform: 'translateX(' + offset + 'px) scale(.985)' },
-            { opacity: 1, transform: 'none' }
+            { opacity: 0, transform: imageTile ? 'translateY(16px)' : 'translateX(' + offset + 'px) scale(.985)' },
+            { opacity: 1, transform: imageTile ? 'translateY(0)' : 'none' }
           ], { duration: 520, delay: delay, easing: 'cubic-bezier(.16,.84,.44,1)', fill: 'backwards' });
         });
       }, { threshold: 0.08, rootMargin: '0px 0px -5% 0px' });

@@ -14,3 +14,9 @@ Keep this file and any linked agent instructions in English.
 
 - `public/` contains browser assets; `npm run build` generates `dist/`, which Netlify publishes. Keep server code, Apps Script, documentation, credentials, and temporary files out of `public/`.
 - Stage only files related to the requested change. Do not include unrelated untracked files or generated output in preview commits.
+
+## Animation guidance
+
+- The repository includes the iart.ai Web Animation Skills in `.agents/skills/`. Read the relevant `SKILL.md` before changing site animations, especially `accessible-animation` and `60fps-animation` for scroll and entrance effects.
+- Adapt examples to this site's plain JavaScript and CSS. Respect `prefers-reduced-motion`, keep content visible without animation, and check the result on mobile and desktop.
+- Skill files are agent guidance, not browser assets or runtime dependencies. Keep them outside `public/` and `dist/`.

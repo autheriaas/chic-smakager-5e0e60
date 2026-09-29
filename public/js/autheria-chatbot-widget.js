@@ -22,7 +22,7 @@
     endpoint: "/.netlify/functions/chat",
     greeting:
       "Hiii, welcome to Claudia's Community! I'm the commission helper \u2014 ask me about pricing, turnaround, how to order, or tell me you're stuck for ideas and I'll help you think of something. What's on your mind?",
-    email: "claudiaartwork3@gmail.com",
+    email: "autheriawork@gmail.com",
     links: {
       commissionForm: "#cta",
       pricing: "#pricing",
@@ -30,7 +30,7 @@
       faq: "#faq",
       howItWorks: "#how-it-works",
       payments: "#payments",
-      discord: "https://discord.gg/s4yKc3pquJ",
+      discord: "https://discord.gg/pQr7FQZQVC",
     },
     quickReplies: [
       "How much does a commission cost?",

@@ -23,6 +23,38 @@ test('portfolio filters cloud media and opens the full image', async ({ page }) 
   await expect(page.locator('.wc-lightbox img.main')).toHaveAttribute('src', full);
 });
 
+test('contact links, featured PFP image, and responsive contact layout', async ({ page }) => {
+  await page.route('**/*', route => {
+    const url = new URL(route.request().url());
+    if (url.hostname !== '127.0.0.1') return route.abort();
+    if (url.pathname.startsWith('/.netlify/functions/')) return route.fulfill({ status: 503 });
+    return route.continue();
+  });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+
+  const contacts = page.locator('.contact-grid .contact-card');
+  await expect(contacts).toHaveCount(7);
+  await expect(contacts.filter({ hasText: 'Discord' })).toHaveAttribute('href', 'https://discord.gg/pQr7FQZQVC');
+  await expect(contacts.filter({ hasText: 'Linktree' })).toHaveAttribute('href', 'https://linktr.ee/artisticlaudia');
+  await expect(contacts.filter({ hasText: 'Email' })).toHaveAttribute('href', 'mailto:autheriawork@gmail.com');
+  const image = page.locator('.style-grid .style-card img').first();
+  await image.scrollIntoViewIfNeeded();
+  await expect(image).toHaveAttribute('src', 'assets/images/warhammer-chainsword-marine-fanart.jpg');
+  await expect.poll(() => image.evaluate(img => img.naturalWidth)).toBeGreaterThan(0);
+
+  const desktopRows = await contacts.evaluateAll(cards => cards.map(card => Math.round(card.getBoundingClientRect().top)));
+  expect(new Set(desktopRows.slice(0, 4)).size).toBe(1);
+  expect(new Set(desktopRows.slice(4)).size).toBe(1);
+  expect(desktopRows[4]).toBeGreaterThan(desktopRows[0]);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const mobileRows = await contacts.evaluateAll(cards => cards.map(card => Math.round(card.getBoundingClientRect().top)));
+  expect(new Set(mobileRows).size).toBe(7);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+});
+
 test('entrance motion respects the reduced-motion preference', async ({ page }) => {
   await page.route('**/*', route => {
     const url = new URL(route.request().url());

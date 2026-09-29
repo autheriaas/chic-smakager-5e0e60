@@ -62,9 +62,9 @@ PART 5 — ORDERING & CONTACT
 To order: fill out the commission form at the bottom of the site, in the "Talk to Claudia directly" section. It asks for name, email, commission type, optional budget, character description, and a reference image URL. The reference field takes a PASTED LINK (Drive, Pinterest, Twitter, etc.), not a file upload. After submitting, a confirmation appears and the team replies by email.
 
 Contacts — the studio is run by Claudia:
-- Email: claudiaartwork3@gmail.com.
+- Email: autheriawork@gmail.com.
 - X/Twitter: @Cozy_Claudia.
-- Discord: https://discord.gg/s4yKc3pquJ — fastest for quick questions and updates.
+- Discord: https://discord.gg/pQr7FQZQVC — fastest for quick questions and updates.
 - Instagram: @autherias_community — finished pieces and behind the scenes.
 - Portfolio: autheria.my.canva.site — full portfolio and extra work.
 If unspecified, default to Claudia's email, or Discord for quick things.

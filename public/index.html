@@ -353,9 +353,9 @@ button{font-family:inherit}
 .faq p{margin-top:12px;font-size:.9rem;color:var(--muted)}
 
 /* contact / cta */
-.contact-grid{display:grid;grid-template-columns:1fr;gap:12px}
-@media (min-width:640px) and (max-width:959px){.contact-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.contact-card:last-child{grid-column:1/-1}}
-@media (min-width:960px){.contact-grid{grid-template-columns:repeat(12,minmax(0,1fr))}.contact-card{grid-column:span 3}.contact-card:nth-child(n+5){grid-column:span 4}}
+.contact-grid{display:grid;grid-template-columns:minmax(0,360px);justify-content:center;gap:12px}
+@media (min-width:640px){.contact-grid{display:flex;flex-wrap:wrap;justify-content:center}.contact-card{flex:0 0 220px;width:220px}}
+@media (min-width:640px) and (max-width:959px){.contact-grid{max-width:452px;margin:0 auto}}
 .contact-card{display:flex;flex-direction:column;gap:8px;padding:18px;position:relative;background:var(--panel);border:1px solid var(--border);border-radius:20px}
 .contact-card .ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700}
 .contact-card .label{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}

@@ -45,9 +45,15 @@ test('contact links, featured PFP image, and responsive contact layout', async (
   await expect.poll(() => image.evaluate(img => img.naturalWidth)).toBeGreaterThan(0);
 
   const desktopRows = await contacts.evaluateAll(cards => cards.map(card => Math.round(card.getBoundingClientRect().top)));
+  const desktopWidths = await contacts.evaluateAll(cards => cards.map(card => Math.round(card.getBoundingClientRect().width)));
   expect(new Set(desktopRows.slice(0, 4)).size).toBe(1);
   expect(new Set(desktopRows.slice(4)).size).toBe(1);
   expect(desktopRows[4]).toBeGreaterThan(desktopRows[0]);
+  expect(new Set(desktopWidths)).toEqual(new Set([220]));
+
+  await page.setViewportSize({ width: 768, height: 844 });
+  const tabletRows = await contacts.evaluateAll(cards => cards.map(card => Math.round(card.getBoundingClientRect().top)));
+  expect(new Set(tabletRows).size).toBe(4);
 
   await page.setViewportSize({ width: 390, height: 844 });
   const mobileRows = await contacts.evaluateAll(cards => cards.map(card => Math.round(card.getBoundingClientRect().top)));

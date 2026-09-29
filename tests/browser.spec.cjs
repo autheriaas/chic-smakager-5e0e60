@@ -37,6 +37,7 @@ test('contact links, featured PFP image, and responsive contact layout', async (
   const contacts = page.locator('.contact-grid .contact-card');
   await expect(contacts).toHaveCount(7);
   await expect(contacts.filter({ hasText: 'Discord' })).toHaveAttribute('href', 'https://discord.gg/pQr7FQZQVC');
+  await expect(contacts.filter({ hasText: 'Discord' }).locator('.value')).toHaveText("Claudia's Community");
   await expect(contacts.filter({ hasText: 'Linktree' })).toHaveAttribute('href', 'https://linktr.ee/artisticlaudia');
   await expect(contacts.filter({ hasText: 'Email' })).toHaveAttribute('href', 'mailto:autheriawork@gmail.com');
   const image = page.locator('.style-grid .style-card img').first();

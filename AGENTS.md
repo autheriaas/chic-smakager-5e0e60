@@ -20,3 +20,8 @@ Keep this file and any linked agent instructions in English.
 - The repository includes the iart.ai Web Animation Skills in `.agents/skills/`. Read the relevant `SKILL.md` before changing site animations, especially `accessible-animation` and `60fps-animation` for scroll and entrance effects.
 - Adapt examples to this site's plain JavaScript and CSS. Respect `prefers-reduced-motion`, keep content visible without animation, and check the result on mobile and desktop.
 - Skill files are agent guidance, not browser assets or runtime dependencies. Keep them outside `public/` and `dist/`.
+
+## UI redesign guidance
+
+- For visual redesign work, read `.agents/skills/taste-skill/SKILL.md` and adapt its design guidance to this site's existing plain HTML, CSS, and JavaScript stack.
+- Preserve the current commission flow, content, cloud media, and accessibility while reviewing changes through the draft preview pull request.

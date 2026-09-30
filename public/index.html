@@ -59,13 +59,13 @@
 <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml"/>
 
 <!-- Theming -->
-<meta name="theme-color" content="#1a1226"/>
+<meta name="theme-color" content="#17131d"/>
 <meta name="color-scheme" content="dark"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Claudia's Community"/>
 <meta name="application-name" content="Claudia's Community"/>
-<meta name="msapplication-TileColor" content="#1a1226"/>
+<meta name="msapplication-TileColor" content="#17131d"/>
 
 <!-- Icons -->
 <link rel="icon" href="assets/meta/favicon.ico" type="image/x-icon"/>
@@ -78,7 +78,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
 <link rel="dns-prefetch" href="https://fonts.googleapis.com"/>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"/>
 
 <!-- Structured data -->
 <script type="application/ld+json">
@@ -204,7 +204,6 @@ button{font-family:inherit}
 .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
 .hero-image{position:relative;border-radius:24px;overflow:hidden;border:1px solid var(--border)}
 .hero-image img{aspect-ratio:4/5;object-fit:cover;width:100%}
-.hero-image .tag{position:absolute;top:16px;left:16px;background:var(--teal);color:var(--bg-deep);font-family:var(--font-display);font-weight:700;font-size:.75rem;padding:6px 14px;border-radius:999px}
 .stats-bar{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:44px}
 .stat{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:16px;text-align:center}
 .stat b{display:block;font-family:var(--font-display);font-size:1.6rem;color:var(--teal)}
@@ -421,16 +420,6 @@ footer{border-top:1px solid var(--border);padding:28px 0;background:rgba(33,23,5
 
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition-duration:.01ms!important}}
 
-/* ---- scroll progress bar ---- */
-#scroll-progress{position:fixed;top:0;left:0;height:4px;width:0%;z-index:1000000;background:linear-gradient(90deg,var(--teal),var(--magenta),var(--violet));box-shadow:0 0 12px rgba(255,62,154,.55);transition:width .08s linear}
-
-/* ---- tilt cards ----
-   Declared BEFORE .reveal on purpose: while an element is still revealing,
-   .reveal's transition wins; once JS strips .reveal the tilt timing takes
-   over. .tilting is higher specificity so it always beats both. */
-.tiltable{transition:transform .45s cubic-bezier(.16,.84,.44,1)}
-.tiltable.tilting{transition:transform .07s linear}
-
 /* ---- scroll reveal ----
    The stagger lives in a custom property that ONLY .reveal reads, so when
    JS removes the class after the animation the delay disappears with it —
@@ -465,18 +454,6 @@ footer{border-top:1px solid var(--border);padding:28px 0;background:rgba(33,23,5
 /* ---- count-up pop ---- */
 .count-pop{display:inline-block;animation:countPop .4s cubic-bezier(.34,1.56,.64,1) both}
 @keyframes countPop{0%{transform:scale(1)}55%{transform:scale(1.18)}100%{transform:scale(1)}}
-
-/* ---- custom cursor (fine pointers only) ---- */
-html.custom-cursor-active,html.custom-cursor-active *{cursor:none!important}
-html.custom-cursor-active input,html.custom-cursor-active textarea,html.custom-cursor-active select{cursor:text!important}
-.cursor-dot{position:fixed;top:0;left:0;pointer-events:none;z-index:1000010;border-radius:50%;transform:translate(-50%,-50%)}
-.cursor-dot{width:8px;height:8px;background:var(--magenta);box-shadow:0 0 10px var(--magenta);transition:opacity .35s ease}
-.cursor-dot.cursor-native,.cursor-dot.cursor-idle{opacity:0}
-/* the chat widget lives in a shadow root, so the page-wide cursor:none
-   never reaches inside it — hand the native cursor back over the widget
-   instead of drawing two cursors on top of each other */
-html.custom-cursor-active #autheria-chatbot-host,
-html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
 
 /* ---- modal (thank-you / feedback confirmation) ---- */
 .modal{position:fixed;inset:0;z-index:1000002;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(10,6,18,.74);backdrop-filter:blur(6px);opacity:0;transition:opacity .22s ease}
@@ -536,10 +513,6 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
 @media (prefers-reduced-motion:reduce){
   .reveal{opacity:1!important;transform:none!important}
   .review-card,.modal-mark,.faq[open] p{animation:none!important}
-  #scroll-progress,.cursor-dot{display:none!important}
-}
-@media (pointer:coarse){
-  .cursor-dot{display:none!important}
 }
 /* iOS Safari force-zooms the whole page when a focused input's font-size
    is under 16px -- every text field on this site was set smaller than
@@ -551,6 +524,7 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
   .fb-inner input,.fb-inner textarea,.field input,.field select,.field textarea{font-size:16px}
 }
 </style>
+<link rel="stylesheet" href="/css/studio.css"/>
 </head>
 <body>
 
@@ -593,16 +567,15 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
         <a href="#commission-form" class="btn btn-primary">Start a commission</a>
         <a href="#how-it-works" class="btn btn-outline">See how it works</a>
       </div>
-      <div class="stats-bar">
-        <div class="stat"><b>68+</b><span>Projects delivered</span></div>
-        <div class="stat"><b>7 yrs</b><span>Studio experience</span></div>
-        <div class="stat"><b>2–3 wks</b><span>Typical turnaround</span></div>
-        <div class="stat"><b id="stat-rating" title="">New</b><span>Avg. client rating</span><small id="stat-rating-count" style="display:block;font-size:.62rem;color:var(--muted);margin-top:3px"></small></div>
-      </div>
     </div>
     <div class="hero-image">
       <img src="assets/images/fox-warrior-oc.jpg" alt="Original fox warrior character illustration by Claudia's Community" loading="eager"/>
-      <span class="tag">From the portfolio</span>
+    </div>
+    <div class="stats-bar">
+      <div class="stat"><b>68+</b><span>Projects delivered</span></div>
+      <div class="stat"><b>7 yrs</b><span>Studio experience</span></div>
+      <div class="stat"><b>2–3 wks</b><span>Typical turnaround</span></div>
+      <div class="stat"><b id="stat-rating" title="">New</b><span>Avg. client rating</span><small id="stat-rating-count" style="display:block;font-size:.62rem;color:var(--muted);margin-top:3px"></small></div>
     </div>
   </div>
 </section>
@@ -1120,24 +1093,6 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
      have "reduce motion" turned on at the OS level — respected fully.
   ===================================================================== */
   var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var hasFinePointer = window.matchMedia('(pointer: fine)').matches;
-
-  /* ---- scroll progress bar (always on, it's just a width change) ---- */
-  var progressBar = document.createElement('div');
-  progressBar.id = 'scroll-progress';
-  document.body.appendChild(progressBar);
-  function updateProgress() {
-    var h = document.documentElement;
-    var max = h.scrollHeight - h.clientHeight;
-    progressBar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
-  }
-  var progressTicking = false;
-  window.addEventListener('scroll', function () {
-    if (progressTicking) return;
-    progressTicking = true;
-    requestAnimationFrame(function () { updateProgress(); progressTicking = false; });
-  }, { passive: true });
-  updateProgress();
 
   if (!prefersReducedMotion) {
     /* ---- scroll reveal, staggered ---- */
@@ -1258,66 +1213,6 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
       countTargets.forEach(function (item) { statIo.observe(item.el); });
     }
 
-    /* ---- gentle 3D tilt on cards (skips interactive/expandable ones) ---- */
-    var tiltSelector = '.custom-card, .style-card, .price-card, .review-card, .pay-card, .build-card, #reviews-empty';
-
-    function bindTilt(els) {
-      Array.prototype.slice.call(els).forEach(function (el) {
-        if (el.dataset.tiltBound) return;
-        el.dataset.tiltBound = '1';
-        el.classList.add('tiltable');
-        var rect = null;
-        var pending = false;
-        var lastX = 0, lastY = 0;
-
-        el.addEventListener('mouseenter', function () {
-          rect = el.getBoundingClientRect();   // measured once per hover, not per pixel
-          el.classList.add('tilting');         // near-instant follow while the pointer is on it
-        });
-        el.addEventListener('mousemove', function (e) {
-          if (!rect) rect = el.getBoundingClientRect();
-          lastX = (e.clientX - rect.left) / rect.width - 0.5;
-          lastY = (e.clientY - rect.top) / rect.height - 0.5;
-          if (pending) return;
-          pending = true;
-          requestAnimationFrame(function () {
-            el.style.transform = 'perspective(800px) rotateX(' + (-lastY * 6).toFixed(2) + 'deg) rotateY(' + (lastX * 6).toFixed(2) + 'deg) translateY(-5px)';
-            pending = false;
-          });
-        });
-        el.addEventListener('mouseleave', function () {
-          rect = null;
-          el.classList.remove('tilting');      // smooth spring back to rest
-          el.style.transform = '';
-        });
-      });
-    }
-    /* exposed so review cards fetched from the sheet later get the same treatment */
-    window.__acBindTilt = bindTilt;
-    bindTilt(document.querySelectorAll(tiltSelector));
-
-    /* ---- soft parallax on the hero art ---- */
-    var heroArt = document.querySelector('.hero-image img');
-    if (heroArt) {
-      var parallaxTicking = false;
-      var heroWrap = heroArt.parentElement;
-      function heroParallax() {
-        var box = heroWrap.getBoundingClientRect();
-        if (box.bottom < 0 || box.top > window.innerHeight) { parallaxTicking = false; return; }
-        var y = Math.max(-40, Math.min(window.scrollY * 0.08, 40));
-        /* scale slightly so shifting the image never exposes a gap inside
-           the rounded, overflow-hidden frame */
-        heroArt.style.transform = 'translateY(' + y.toFixed(1) + 'px) scale(1.08)';
-        parallaxTicking = false;
-      }
-      window.addEventListener('scroll', function () {
-        if (parallaxTicking) return;
-        parallaxTicking = true;
-        requestAnimationFrame(heroParallax);
-      }, { passive: true });
-      heroParallax();
-    }
-
     /* ---- work-grid videos: play automatically once on screen, pause once
        scrolled away. Muted + loop so it behaves like a looping preview
        clip rather than something with sound that needs a play button --
@@ -1341,63 +1236,6 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
       Array.prototype.forEach.call(vids, function (v) { io.observe(v); });
     })();
 
-    /* ---- trailing custom cursor (fine pointers only, e.g. desktop mice) ----
-       Dot only now -- the lagging cyan ring around it was cut per feedback
-       that it was distracting; just the small dot remains. */
-    if (hasFinePointer) {
-      document.documentElement.classList.add('custom-cursor-active');
-      var cursorDot = document.createElement('div'); cursorDot.className = 'cursor-dot';
-      document.body.appendChild(cursorDot);
-
-      var idleTimer = null;
-      function markActive() {
-        cursorDot.classList.remove('cursor-idle');
-        if (idleTimer) clearTimeout(idleTimer);
-        /* If the mouse hasn't moved in a bit — most commonly because the
-           person alt-tabbed or clicked into another window/tab rather than
-           moving the pointer off the page — fade the trailing cursor out
-           instead of leaving it frozen wherever it last was. */
-        idleTimer = setTimeout(function () {
-          cursorDot.classList.add('cursor-idle');
-        }, 1500);
-      }
-      document.addEventListener('mousemove', function (e) {
-        cursorDot.style.transform = 'translate(' + e.clientX + 'px,' + e.clientY + 'px) translate(-50%,-50%)';
-        markActive();
-      });
-      document.addEventListener('visibilitychange', function () {
-        /* Tab switched away / window lost focus: this is the case a plain
-           mouseleave can't catch (the pointer never crossed the viewport
-           edge), so fade the cursor out immediately rather than waiting
-           on the idle timer. */
-        if (document.hidden) cursorDot.classList.add('cursor-idle');
-      });
-      window.addEventListener('blur', function () {
-        cursorDot.classList.add('cursor-idle');
-      });
-
-      /* Delegated instead of bound per element: elements added later (live
-         review cards, the lightbox, the modal) get the same behaviour for
-         free, and there is no stale listener left behind when they go. */
-      var TEXT_SEL = 'input, textarea, select';
-      document.addEventListener('mouseover', function (e) {
-        var t = e.target;
-        if (!t || !t.closest) return;
-        /* The chat widget lives in a shadow root the page cursor can't reach,
-           so hand the native pointer back rather than drawing two cursors. */
-        var overWidget = !!t.closest('#autheria-chatbot-host');
-        var overText = !overWidget && !!t.closest(TEXT_SEL);
-        cursorDot.classList.toggle('cursor-native', overText || overWidget);
-      }, { passive: true });
-      /* pointer left the page entirely - park the cursor rather than freeze it */
-      document.addEventListener('mouseleave', function () {
-        cursorDot.classList.add('cursor-native');
-      });
-      document.addEventListener('mouseenter', function () {
-        cursorDot.classList.remove('cursor-native');
-        markActive();
-      });
-    }
   }
 
   /* ---- mobile nav ---- */
@@ -1622,13 +1460,12 @@ html.custom-cursor-active #autheria-chatbot-host *{cursor:auto!important}
       var stars = '★★★★★'.slice(0, val) + '☆☆☆☆☆'.slice(0, 5 - val);
       var text = escapeHtml(r.text || '');
       var name = escapeHtml(r.name || 'Anonymous');
-      return '<div class="card review-card tiltable" style="--card-delay:' + (Math.min(i, 7) * 70) + 'ms">' +
+      return '<div class="card review-card" style="--card-delay:' + (Math.min(i, 7) * 70) + 'ms">' +
         '<div class="review-stars" aria-label="' + val + ' out of 5 stars">' + stars + '</div>' +
         (text ? '<p class="review-text">' + text + '</p>' : '') +
         '<div class="review-name">' + name + '</div>' +
         '</div>';
     }).join('');
-    if (window.__acBindTilt) window.__acBindTilt(list.querySelectorAll('.review-card'));
   }
 
   /* Keeps a copy of whatever review data is currently on the page, so the

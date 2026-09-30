@@ -4,6 +4,85 @@ const { backend } = require('./sheets-mock.cjs');
 const orders = require('../netlify/functions/orders').handler;
 const reviews = require('../netlify/functions/reviews').handler;
 
+test('portfolio filters cloud media and opens the full image', async ({ page }) => {
+  await page.route('**/*', route => {
+    const url = new URL(route.request().url());
+    if (url.hostname !== '127.0.0.1') return route.abort();
+    if (url.pathname.startsWith('/.netlify/functions/')) return route.fulfill({ status: 503 });
+    return route.continue();
+  });
+  await page.goto('/');
+  await expect(page.locator('#gallery')).toHaveCount(0);
+  await expect(page.locator('#more-work .wc-work-item')).toHaveCount(103);
+  await page.locator('.filter-btn[data-filter="character-art"]').click();
+  const first = page.locator('#more-work .wc-work-item[data-item-cat~="character-art"]').first();
+  await expect(first).toBeVisible();
+  await expect(first.locator('img')).toHaveAttribute('data-full', /\/images\/.*\.webp$/);
+  const full = await first.locator('img').getAttribute('data-full');
+  await first.click();
+  await expect(page.locator('.wc-lightbox img.main')).toHaveAttribute('src', full);
+});
+
+test('contact links, featured PFP image, and responsive contact layout', async ({ page }) => {
+  await page.route('**/*', route => {
+    const url = new URL(route.request().url());
+    if (url.hostname !== '127.0.0.1') return route.abort();
+    if (url.pathname.startsWith('/.netlify/functions/')) return route.fulfill({ status: 503 });
+    return route.continue();
+  });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+
+  const contacts = page.locator('.contact-grid .contact-card');
+  await expect(contacts).toHaveCount(7);
+  await expect(contacts.filter({ hasText: 'Discord' })).toHaveAttribute('href', 'https://discord.gg/pQr7FQZQVC');
+  await expect(contacts.filter({ hasText: 'Discord' }).locator('.value')).toHaveText("Claudia's Community");
+  await expect(contacts.filter({ hasText: 'Linktree' })).toHaveAttribute('href', 'https://linktr.ee/artisticlaudia');
+  await expect(contacts.filter({ hasText: 'Email' })).toHaveAttribute('href', 'mailto:autheriawork@gmail.com');
+  const image = page.locator('.style-grid .style-card img').first();
+  await image.scrollIntoViewIfNeeded();
+  await expect(image).toHaveAttribute('src', 'assets/images/warhammer-chainsword-marine-fanart.jpg');
+  await expect.poll(() => image.evaluate(img => img.naturalWidth)).toBeGreaterThan(0);
+
+  const desktopRows = await contacts.evaluateAll(cards => cards.map(card => Math.round(card.getBoundingClientRect().top)));
+  const desktopWidths = await contacts.evaluateAll(cards => cards.map(card => Math.round(card.getBoundingClientRect().width)));
+  expect(new Set(desktopRows.slice(0, 4)).size).toBe(1);
+  expect(new Set(desktopRows.slice(4)).size).toBe(1);
+  expect(desktopRows[4]).toBeGreaterThan(desktopRows[0]);
+  expect(new Set(desktopWidths)).toEqual(new Set([220]));
+
+  await page.setViewportSize({ width: 768, height: 844 });
+  const tabletRows = await contacts.evaluateAll(cards => cards.map(card => Math.round(card.getBoundingClientRect().top)));
+  expect(new Set(tabletRows).size).toBe(4);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const mobileRows = await contacts.evaluateAll(cards => cards.map(card => Math.round(card.getBoundingClientRect().top)));
+  expect(new Set(mobileRows).size).toBe(7);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+});
+
+test('entrance motion respects the reduced-motion preference', async ({ page }) => {
+  await page.route('**/*', route => {
+    const url = new URL(route.request().url());
+    if (url.hostname !== '127.0.0.1') return route.abort();
+    if (url.pathname.startsWith('/.netlify/functions/')) return route.fulfill({ status: 503 });
+    return route.continue();
+  });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  await expect(page.locator('.hero h1')).toHaveCSS('animation-name', 'heroCopyEnter');
+  await expect(page.locator('.hero-image')).toHaveCSS('animation-name', 'heroImageEnter');
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.reload();
+  await expect(page.locator('.hero h1')).toHaveCSS('animation-name', 'none');
+  const tile = page.locator('#more-work .wc-work-item').first();
+  await tile.scrollIntoViewIfNeeded();
+  await expect(tile).toBeVisible();
+  expect(await tile.evaluate(element => element.getAnimations().length)).toBe(0);
+});
+
 async function fixture(page) {
   const b = backend(); b.setup();
   Object.assign(process.env, { APPS_SCRIPT_URL: 'https://script.google.com/macros/s/test/exec', SITE_URL: 'https://example.test', BACKEND_SECRET: b.properties.get('BACKEND_SECRET') });
